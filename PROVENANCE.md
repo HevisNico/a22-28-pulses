@@ -52,3 +52,13 @@ Changes to the tools: import paths; the extractor reads the terminal time from t
 its output is unchanged on all published domains). `tools/build_q_domain.py` and `tools/verify.py` are new.
 The documents are unchanged; their figures for the first version (±1e-4, 128 pulses, T = 1116) are carried
 to this result by the extension documents.
+
+## Current documentation clarifications
+
+`model/CURRENT_SPEC.md` is a current reading guide to the archived equations and the
+28-pulse/T = 230 extensions. The README and proof index link to it and state the exact
+parameter and initial-state scope. The introductory docstring of
+`tools/audit_commutations.py` describes its diagnostic output and the general lemma E.
+These clarifications leave the historical model documents, engine sources, proof archives,
+campaign records, certificates and release-asset checksums unchanged. They do not extend
+the proved family or supply a formal verification of the engine.

@@ -1,9 +1,10 @@
 # A22 — certified exact transmission after 28 training pulses
 
 **Result.** A learning spiking network of 216 coupled hybrid cells (18 layers × 12 lanes) is trained
-by **28 source pulses** on lane 0 (times 0, 8, …, 216). For **every device** whose physical constants
-lie within **±0.1 %** of nominal, independently for each input port of each cell, and for every initial
-state within ±1e-5:
+by **28 source pulses** on lane 0 (times 0, 8, …, 216). For **every fixed device** whose five
+per-port parameters **C_i, L_m,i, L_s,i, L_e,i and M_i** lie independently within **±0.1 %** of nominal,
+and for every state in the [specified initial family](model/CURRENT_SPEC.md#initial-family)
+(with δ = 1e-5 on the specified coordinates, restricted initial modes and E in [50,100]):
 
 1. **Training.** At **t = 230** the network is in an explicit quiescent domain **Q28**
    ([`terminal/invariant_domain_Q28.json`](terminal/invariant_domain_Q28.json)).
@@ -13,6 +14,10 @@ state within ±1e-5:
 3. **Exact transmission.** Each active cell answers with a fixed latency, so the intervals between pulses
    are transmitted **exactly** through all 18 layers. The latencies depend on the device and on the learned
    gains; they are not claimed to be equal across devices.
+
+The [current specification](model/CURRENT_SPEC.md) lists the fixed constants, initial-state
+restrictions and source protocol. In particular, a, κ, r, r_m, the thresholds, actuation factors,
+energy-pump constants and b_max are fixed; the parameter box does not include time-varying drift.
 
 The proof combines a computer-assisted enclosure of every admissible trajectory of the training with a
 written argument that the enclosure covers them, and with finite certificates for the future regime.
@@ -30,7 +35,9 @@ the rest of the argument, the program and its arithmetic are not. Review is welc
 
 | | |
 |---|---|
-| Physical box; initial states | ±1e-3 relative on every constant, one symbol per port; ±1e-5 |
+| Physical parameters | ±1e-3 relative on C_i, L_m,i, L_s,i, L_e,i and M_i; fixed independently per port |
+| Parameter representation | Separate per-port symbols for LM/LS/LE/M; C kept as an interval box |
+| Initial family | δ = 1e-5 on the specified coordinates; restricted modes; E in [50,100] ([details](model/CURRENT_SPEC.md#initial-family)) |
 | Training source | 28 canonical pulses, lane 0, times 8k for k = 0…27 |
 | Terminal cut | exact time 230, checked for every cell (no uncertain term) |
 | Layers accepted | 18 / 18, each layer re-read by a separate verifier process |
@@ -47,7 +54,7 @@ from the first version are listed in [`PROVENANCE.md`](PROVENANCE.md).
 
 | Part | Argument | Checked by |
 |---|---|---|
-| Model | [`model/full_model_reference.md`](model/full_model_reference.md) | — |
+| Model and current protocol | [`model/CURRENT_SPEC.md`](model/CURRENT_SPEC.md), with the archived equations linked there | — |
 | Training covers every trajectory | coverage theorem and its extensions ([`proof/README.md`](proof/README.md), steps 2–4) | the campaign; extraction, lineage and commutation audits |
 | Entry into Q28 at 230 | same | [`terminal/`](terminal/) |
 | Future regime from Q28 | future invariance proof (step 5) | two independent programs (directed integers, directed decimals) |
@@ -60,7 +67,8 @@ from the first version are listed in [`PROVENANCE.md`](PROVENANCE.md).
 python3 -I tools/verify.py
 ```
 recomputes the initial section, the future certificate, its independent check and Q28 from the committed
-records, and compares them (standard library only; also run by CI). With the release assets of `v1.0`
+records, and compares them (standard library only; also run by CI). This default command does not
+rerun training or validate the release campaign payloads. With the release assets of `v1.0`
 (their SHA-256 are in [`RELEASE_ASSETS_SHA256.json`](RELEASE_ASSETS_SHA256.json)):
 
 ```sh
