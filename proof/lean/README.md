@@ -7,8 +7,8 @@ Five files, all without `sorry`; their `#print axioms` list only `propext`, `Cla
 
 [`StrictRoot.lean`](StrictRoot.lean) formalizes, in Lean 4 with Mathlib, the abstract mathematical
 argument of Task 1 of [`REVIEW.md`](../../REVIEW.md): the strict-root lemma
-(`proof/kernel_soundness/output/STRICT_ROOT_LEMMA_EN.txt`) and Sections 4–6 of
-`proof/learning_justification/output/LEARNING_COVERAGE_THEOREM_EN.txt`.
+(`proof/base/STRICT_ROOT_LEMMA_EN.txt`) and Sections 4–6 of
+`proof/base/LEARNING_COVERAGE_THEOREM_EN.txt`.
 
 | Result | Statement |
 |---|---|
@@ -25,10 +25,10 @@ argument of Task 1 of [`REVIEW.md`](../../REVIEW.md): the strict-root lemma
 shortcut in `exp`/`ln`, the slope evaluated before the guard, the fresh time atom of
 `temporal.shift`). That bridge is not formalized; it is what remains of Task 1 for a reviewer.
 
-## Lemmas C7, C6 and remark P (v4.4)
+## Lemmas C7, C6 and remark P
 
 [`PeakBounds.lean`](PeakBounds.lean) proves the mathematical content of
-[`sweep/v33_c7/LEMMAS_C7_C6_EN.txt`](../../sweep/v33_c7/LEMMAS_C7_C6_EN.txt), for the READY charge
+[`proof/extensions/LEMMAS_C7_C6_EN.txt`](../extensions/LEMMAS_C7_C6_EN.txt), for the READY charge
 `Q(u) = R + (q − R)e^{−Ku} + J(e^{−Ku} − e^{−Au})/(A − K)` with general `0 < K < A`.
 
 | Result | Statement |
@@ -43,10 +43,10 @@ shortcut in `exp`/`ln`, the slope evaluated before the guard, the fresh time ato
 Same scope as above: that `peak_upper`, `dep.evaluate` and the derivative enclosures meet these
 hypotheses is a claim about the code, not formalized.
 
-## Lemma E (v4.4, commutations at ε = 1e-3)
+## Lemma E (commutations at ε = 1e-3)
 
 [`CommutationE.lean`](CommutationE.lean) proves the mathematical part of lemma E
-([`sweep/v33_c7/COVERAGE_THEOREM_GENERAL_EPS_EN.txt`](../../sweep/v33_c7/COVERAGE_THEOREM_GENERAL_EPS_EN.txt),
+([`proof/extensions/COVERAGE_THEOREM_GENERAL_EPS_EN.txt`](../extensions/COVERAGE_THEOREM_GENERAL_EPS_EN.txt),
 section 3): a READY fire against a group of exterior events that includes input arrivals.
 
 | Result | Statement |
@@ -78,9 +78,9 @@ The raw ends, where the current drops and `d` only decreases, are a hypothesis o
 ## One future wave and the exact word
 
 [`FutureWave.lean`](FutureWave.lean): the steps of the future proof
-([`FUTURE_INVARIANCE_PROOF_EN.txt`](../FUTURE_INVARIANCE_PROOF_EN.txt), sections C–D) and of the
+([`FUTURE_INVARIANCE_PROOF_EN.txt`](../base/FUTURE_INVARIANCE_PROOF_EN.txt), sections C–D) and of the
 word-preservation argument
-([`GLOBAL_THEOREM_AND_WORD_PRESERVATION_EN.txt`](../GLOBAL_THEOREM_AND_WORD_PRESERVATION_EN.txt))
+([`GLOBAL_THEOREM_AND_WORD_PRESERVATION_EN.txt`](../base/GLOBAL_THEOREM_AND_WORD_PRESERVATION_EN.txt))
 that do not depend on the certified numbers.
 
 | Result | Statement |

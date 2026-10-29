@@ -18,8 +18,10 @@ The proof combines a computer-assisted enclosure of every admissible trajectory 
 written argument that the enclosure covers them, and with finite certificates for the future regime.
 It holds under explicit execution assumptions (A1–A4: authentic execution of the recorded program, correct
 arithmetic runtime and native binaries, fail-closed assertions, namespace discipline). It has **not yet been
-reviewed by an independent expert**; its purely mathematical steps are machine-checked in Lean 4. Review is
-welcome: [`REVIEW.md`](REVIEW.md).
+reviewed by an independent expert**. Some of its mathematical lemmas are machine-checked in Lean 4 (the
+abstract core of the strict-root lemma, lemmas C7, C6 and P, the mathematical part of lemma E, the
+first-crossing facts and the number-free steps of the future proof; list in [`proof/README.md`](proof/README.md));
+the rest of the argument, the program and its arithmetic are not. Review is welcome: [`REVIEW.md`](REVIEW.md).
 
 > **Made with AI.** The code, the diagnostics and the written proof were produced with Claude
 > (Anthropic) and ChatGPT (OpenAI) under the direction of Nicolas Breuillaud.
@@ -50,7 +52,7 @@ from the first version are listed in [`PROVENANCE.md`](PROVENANCE.md).
 | Entry into Q28 at 230 | same | [`terminal/`](terminal/) |
 | Future regime from Q28 | future invariance proof (step 5) | two independent programs (directed integers, directed decimals) |
 | Exact transmission | word-preservation theorem (step 6) | — |
-| Mathematical lemmas | strict roots, C7/C6/P, lemma E, first crossings, future-wave steps | Lean 4, no `sorry` ([`proof/lean/`](proof/lean/README.md)) |
+| Selected mathematical lemmas | strict-root core, C7/C6/P, mathematical part of lemma E, first crossings, number-free future-wave steps | Lean 4, no `sorry` ([`proof/lean/`](proof/lean/README.md)) |
 
 ## Check it
 
