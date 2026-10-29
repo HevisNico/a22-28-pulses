@@ -1,0 +1,44 @@
+--- upstream/kernel/R_cycle_local_A20_2026-10-18/validation_A15.py
++++ engine/kernel/R_cycle_local_A20_2026-10-18/validation_A15.py
+@@ -417,8 +417,8 @@
+             mon=shift(start,D1 if k==0 else D0,f'{cell}:m:{j}:{k}')
+             off=shift(mon,DM,f'{cell}:mo:{j}:{k}');err=shift(off,DS,f'{cell}:e:{j}:{k}');end=shift(err,DE,f'{cell}:eo:{j}:{k}')
+             add(mon,'mark_on',j,mon);add(off,'mark_off',j,mon);add(err,'error_on',j,err);add(end,'error_off',j,err)
+-    add(v.T('clock',I(0),D(1116)),'end')
+-    pending=sorted(events.values(),key=lambda e:e[0].box().mid());assert pending[-1][0].token()==('clock','1116')
++    add(v.T('clock',I(0),D(230)),'end')
++    pending=sorted(events.values(),key=lambda e:e[0].box().mid());assert pending[-1][0].token()==('clock','2.3E+2')
+     suffix=[D('Infinity')]*(len(pending)+1)
+     for k in range(len(pending)-1,-1,-1):suffix[k]=min(suffix[k+1],pending[k][0].box().lo)
+     s=dict(t=v.T('initial_slab',U0),q=R+I(-DELTA.hi,DELTA.hi)*(-K*U0).exp()+I(0,(3*C*A*U0).hi),
+@@ -502,7 +502,7 @@
+             elif kind=='gstop':stops+=1
+         assert count<20000
+     assert s['p']==0 and s['aux']==[0]*3 and s['raw']==[None]*3
+-    aux=[RM if tr else RM+I(-DELTA.hi,DELTA.hi)*(-K*(I(1116)-U0)).exp() for tr in inputs]
++    aux=[RM if tr else RM+I(-DELTA.hi,DELTA.hi)*(-K*(I(230)-U0)).exp() for tr in inputs]
+     return out,dict(q=s['q'].pair(),g=[(C if s['caps'][j] else s['z'][j].exp()).pair() for j in range(3)],b=s['b'].pair(),E=[50,100],m=[x.pair() for x in aux],
+         main_phase=0,aux_phases=[0]*3,pending=[],caps=s['caps'],b_stop=s['bstop'],gain_stops=sum(s['caps']),clusters=clusters,orders_enclosed=branches,events=count,
+         width_profile=PROFILE.export(),actuation_summary=[dict(full_marks=h.full,partial_marks=len(h.partial),saturated=h.saturated) for h in s['actuation']],
+--- upstream/run.py
++++ engine/run.py
+@@ -37,7 +37,7 @@
+     from affine_iv import I
+     temporal.begin_producer(run_id+'/source')
+     clock=temporal.Time('canonical-initial-clock',I(0))
+-    return [tuple(clock.plus(8*k) for k in range(128))]+[()]*11
++    return [tuple(clock.plus(8*k) for k in range(28))]+[()]*11
+ 
+ def worker(case):
+     root=Path(case['run_dir']);layer=case['layer'];lane=case['lane']
+@@ -188,7 +188,9 @@
+             import _rounding_native
+             env['native_sha256']=a.file_hash(_rounding_native.__file__)
+         frozen_source_id=identity()
+-        parameters={'epsilon_relative':epsilon,'initial_delta':'1e-5'}
++        parameters={'epsilon_relative':epsilon,'initial_delta':'1e-5',
++                    'training_calendar':{'count':28,'gap':'8','first':'0','last':'216',
++                                         'source_lane':0,'terminal_time':'230'}}
+         kernel_id=a.canonical_hash({'sources':frozen_source_id,'environment':env,'parameters':parameters,'precision':160,'symbols':affine_iv_kmax()})
+         config=root/'campaign.json'
+         if config.exists():

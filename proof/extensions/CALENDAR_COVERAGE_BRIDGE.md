@@ -1,5 +1,13 @@
 # Manual coverage bridge: 28 source pulses and terminal time 230
 
+> **Paths in this repository.** This document is copied unchanged from the delivery of the campaign.
+> `review/` there holds the proof documents, here in [`../base/`](../base/) and [`./`](./);
+> `upstream/` there holds the original C7 package, here `sweep/v33_c7/A22_fresh_launch_v3_3_C7.zip` of
+> [a22-interval-replay](https://github.com/HevisNico/a22-interval-replay) (Git blob `9f44aa48…`);
+> `calendar28_T230.patch` is [`calendar28_T230.patch`](calendar28_T230.patch) here; `engine/` is [`../../engine/`](../../engine/).
+> The campaign of this repository was run with the same engine plus the outward rounding of lemma E
+> ([`lemma_e_outward_rounding/`](lemma_e_outward_rounding/README.md)).
+
 Project: Training schedule search with a bounded meta-selection step.
 This is a fixed-schedule whole-box enclosure campaign. It is not a point-sampling
 experiment, and no adaptive schedule search takes place during this run.

@@ -45,7 +45,7 @@ spike and an event can never pass the ordinary order test.
    and would remove the strict margin?
    (Known case: `exp` returns 1 exactly for the exact point argument 0, that is at elapsed time zero,
    where q0 < 1 excludes a root; the wording of Section 5.1 on this is clarified at the end of
-   `sweep/v33_c7/COVERAGE_THEOREM_GENERAL_EPS_EN.txt`.)
+   `proof/extensions/COVERAGE_THEOREM_GENERAL_EPS_EN.txt`.)
 
 **Machine-checked part.** The abstract argument behind questions 1 and 2 (open-image lemma in
 two-point form, accepted brackets, Newton steps including the rounded-midpoint-zero case, every
@@ -58,11 +58,13 @@ question 3 together with freshness of the perturbed coordinates and the evaluati
 
 **Claim.** For every physical order of events, including equal times, the program keeps a branch that
 covers it, through every successful path: ordinary advance, external groups, protected FAST/SLOW
-groups, recovery/auxiliary groups, the local-cycle resolver, and the 202 recorded commutations (all a
-spike against one end of mark, including the fallback `_first_crossing_cover`). Entry into event groups
-is always forward in time (`proof/base/GROUP_ENTRY_CLOCK_LEMMA_EN.txt`).
-At ε = 1e-3 the commutations also include input arrivals (202 of 206); they are covered by lemma E of
-[`sweep/v33_c7/COVERAGE_THEOREM_GENERAL_EPS_EN.txt`](sweep/v33_c7/COVERAGE_THEOREM_GENERAL_EPS_EN.txt).
+groups, recovery/auxiliary groups, the local-cycle resolver, and the recorded fire/event commutations
+(including the fallback `_first_crossing_cover`). Entry into event groups is always forward in time
+(`proof/base/GROUP_ENTRY_CLOCK_LEMMA_EN.txt`). This campaign records 6 commutations, all in layer 18:
+2 against an input arrival with its mark (four orders), 2 against an input cut and 2 against an error
+onset (two orders each); all are covered by lemma E of
+[`proof/extensions/COVERAGE_THEOREM_GENERAL_EPS_EN.txt`](proof/extensions/COVERAGE_THEOREM_GENERAL_EPS_EN.txt)
+(`terminal/commutation_usage.json`, `tools/audit_commutations.py`).
 
 **Where:** effective `unit` (`proof/base/effective_source_v33/unit.txt`),
 `validation_A15.py` (`admissible_orders`, `protected_section_cluster`, `recovery_auxiliary_cluster`),
@@ -137,14 +139,6 @@ line 222), tests in `engine/tests/test_v33_ports.py`.
    the plain box?
 2. Is the per-mark `raw_dose` identical to the kernel's for a single-port history, and correct for a
    history that mixes ports?
-
----
-
-## Depth extension (v4.0-depth)
-
-These tasks concern [`depth/`](depth/README.md). Several of the cited documents are in French; their
-formulas and tables can be read directly.
-
 
 ## Task 7 — Lemmas C7, C6 and remark P (wider box)
 

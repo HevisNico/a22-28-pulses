@@ -90,15 +90,21 @@ def outputs_checks(campaign, tmp):
 def engine_checks(engine):
     top = {'run.py', 'build_native.py', 'build_all_native.py', 'launch_fresh.py', 'reference/full_model_reference.md'}
 
+    binary_suffixes = ('.so', '.pyd', '.dll', '.dylib', '.o')
+
     def identity_files(base):
         return {str(p.relative_to(base)) for p in base.rglob('*') if p.is_file() and '__pycache__' not in p.parts
                 and (str(p.relative_to(base)) in top or p.relative_to(base).parts[0] in ('affine', 'kernel'))}
 
     def contents():
-        a, b = identity_files(engine), identity_files(REPO / 'engine')
-        binaries = {x for x in a - b if x.endswith('.so')}
+        # Sources are compared with engine/; binaries are taken from the as-run engine only, so native
+        # extensions built locally inside engine/ (for a test run) do not enter the comparison.
+        run_files, repo_files = identity_files(engine), identity_files(REPO / 'engine')
+        a = {x for x in run_files if not x.endswith(binary_suffixes)}
+        b = {x for x in repo_files if not x.endswith(binary_suffixes)}
+        binaries = {x for x in run_files if x.endswith(binary_suffixes)}
         differ = sorted(x for x in a & b if sha(engine / x) != sha(REPO / 'engine' / x))
-        extra = sorted(a - b - binaries) + sorted(b - a)
+        extra = sorted(a - b) + sorted(b - a)
         campaign = json.loads((REPO / 'campaign' / 'campaign.json').read_text())
         natives = [x for x in binaries if x.startswith('affine/_rounding_native')]
         native_ok = len(natives) == 1 and sha(engine / natives[0]) == campaign['environment']['native_sha256']
