@@ -2,8 +2,7 @@
 
 This repository contains one result, its campaign and a **manual proof** that the campaign covers
 every admissible trajectory, under stated execution assumptions. The proof has **not yet been reviewed
-by an independent expert**. The fastest way to check it is to take small, self-contained pieces. Each
-task below can be read in **one to three hours** without knowing the rest.
+by an independent expert**. The fastest way to check it is to take small, self-contained pieces.
 
 **What helps most:** one of three answers, given as a GitHub issue titled `Review: <task>`:
 - "the argument holds";
