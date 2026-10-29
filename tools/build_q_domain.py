@@ -12,6 +12,8 @@ import json
 import sys
 from decimal import Decimal as D
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from certificate_parameters import resolve_epsilon
 
 
 def main(terminal_path, certificate_path, output_path):
@@ -20,6 +22,8 @@ def main(terminal_path, certificate_path, output_path):
     terminal_path, certificate_path = Path(terminal_path), Path(certificate_path)
     terminal = json.loads(terminal_path.read_text())
     future = json.loads(certificate_path.read_text())
+    resolve_epsilon(terminal, certificate=future)
+    assert future['campaign'] == terminal['campaign']
     assert future['terminal_input_sha256'] == hashlib.sha256(terminal_path.read_bytes()).hexdigest()
     assert future['status'].startswith('PASS')
     classes = {(r['layer'], r['lane']): r for r in future['cells']}

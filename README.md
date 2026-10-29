@@ -77,8 +77,24 @@ python3 -I tools/verify.py campaign28_T230_eps1e-3 --engine A22_28_engine_as_run
 ```
 also checks every output file against [`campaign/RUN_MANIFEST.json`](campaign/RUN_MANIFEST.json), re-extracts
 the terminal state and reruns the lineage and commutation audits byte for byte, and recomputes the
-campaign `kernel_id` from the as-run engine (this last step needs the interpreter the engine was built for:
-CPython 3.13, numpy 2.3.5, scipy 1.17.0). Expected: `11 PASS, 0 FAIL`.
+archived `kernel_id` from the engine files and the recorded environment. These are static checks:
+they do not import the archived engine or require its original interpreter. Expected: `11 PASS, 0 FAIL`.
+
+To additionally check the **loaded runtime**, use:
+```sh
+python3 -I tools/verify.py campaign28_T230_eps1e-3 --engine A22_28_engine_as_run --check-runtime
+```
+This requires the recorded CPython **3.13.17**, numpy **2.3.5**, scipy **1.17.0**, and both archived
+native extensions. A Python fallback, a different interpreter or different loaded binaries fail this
+additional check. Expected with a matching runtime: `12 PASS, 0 FAIL`.
+
+The future-certificate tools read ε from the terminal campaign metadata. An optional explicit ε must
+match it exactly; the independent checker and Q28 builder also check the certificate's ε. The independent
+report records the checked value as `eps`. For example, the standalone check uses ε = 1e-3 automatically:
+```sh
+python3 -I tools/verify_future.py terminal/all_terminal_exact.json terminal/future_certificate.json check.json
+python3 -B -m unittest discover -s tools/tests
+```
 
 To rerun the campaign itself (about 10 minutes with 4 workers):
 ```sh

@@ -5,8 +5,11 @@
                                                # (release asset campaign28_T230_eps1e-3)
     python3 -I tools/verify.py [<campaign dir>] --engine <engine dir>
         # also check that the as-run engine (release asset, with its native binaries) has the
-        # sources of engine/ and recompute the campaign kernel_id from it; this step imports the
-        # engine and needs the interpreter it was built for (CPython 3.13, numpy 2.3.5, scipy 1.17.0)
+        # sources of engine/ and recompute the archived kernel_id using the recorded environment.
+        # This is a static file check: it does not import or execute the archived engine.
+    python3 -I tools/verify.py [<campaign dir>] --engine <engine dir> --check-runtime
+        # additionally load the engine and require the actual Python, numpy, scipy and native
+        # backend to match the recorded environment, including the loaded binary hashes.
 
 Without a campaign directory: the initial section is recomputed and compared byte for byte; the
 future certificate and its independent check are regenerated from terminal/all_terminal_exact.json
@@ -17,8 +20,11 @@ With a campaign directory: first every output file is checked against campaign/R
 then the terminal extraction, the lineage and clock audit and the commutation audit are rerun and
 compared byte for byte with terminal/, before the checks above.
 
-Standard library only; no engine import. Each check prints PASS or FAIL; exit code 1 on any FAIL.
+Standard library only unless --check-runtime is requested. Each check prints PASS or FAIL;
+exit code 1 on any FAIL. Runtime loading is skipped when static engine checks fail.
 """
+import argparse
+import ast
 import hashlib
 import json
 import os
@@ -31,6 +37,74 @@ REPO = Path(__file__).resolve().parents[1]
 TOOLS = REPO / 'tools'
 TERMINAL = REPO / 'terminal'
 RESULTS = []
+
+
+def source_identity(engine):
+    """Static counterpart of engine/run.py identity(), with the same file selection."""
+    top = ('run.py', 'build_native.py', 'build_all_native.py', 'launch_fresh.py',
+           'reference/full_model_reference.md')
+    paths = [engine / name for name in top]
+    for directory in ('affine', 'kernel'):
+        paths.extend(p for p in (engine / directory).rglob('*')
+                     if p.is_file() and '__pycache__' not in p.parts
+                     and p.suffix in ('.py', '.c', '.h', '.so', '.pyd', '.dll', '.dylib'))
+    digest = hashlib.sha256()
+    for path in sorted(paths):
+        digest.update(str(path.relative_to(engine)).encode() + b'\0')
+        digest.update(path.read_bytes())
+    return digest.hexdigest()
+
+
+def symbol_limit(engine):
+    tree = ast.parse((engine / 'affine' / 'affine_iv.py').read_text())
+    values = [ast.literal_eval(node.value) for node in tree.body if isinstance(node, ast.Assign)
+              and any(isinstance(target, ast.Name) and target.id == 'KMAX' for target in node.targets)]
+    if len(values) != 1 or type(values[0]) is not int or values[0] <= 0:
+        raise ValueError('expected one positive literal KMAX assignment')
+    return values[0]
+
+
+def archived_kernel_id(engine, campaign):
+    identity = {'sources': source_identity(engine), 'environment': campaign['environment'],
+                'parameters': campaign['parameters'], 'precision': 160, 'symbols': symbol_limit(engine)}
+    encoded = json.dumps(identity, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def runtime_environment(engine, campaign):
+    """Inspect loaded modules in a fresh process, without substituting recorded values."""
+    code = '''
+import hashlib, importlib, json, platform, sys
+from pathlib import Path
+root = Path(sys.argv[1]).resolve()
+sys.path.insert(0, str(root))
+import run
+run.initialize(Path(sys.argv[2]))
+import numpy, scipy, rounding
+environment = dict(python=platform.python_version(), numpy=numpy.__version__,
+                   scipy=scipy.__version__, arithmetic_backend=rounding.BACKEND)
+native_files = {}
+if rounding.BACKEND == 'native':
+    for name, folder in (('_rounding_native', root / 'affine'),
+                         ('_a22_native', root / 'kernel' / 'native')):
+        module = importlib.import_module(name)
+        path = Path(module.__file__).resolve()
+        if path.parent != folder.resolve():
+            raise RuntimeError('native module loaded outside the selected engine: ' + name)
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        native_files[str(path.relative_to(root))] = digest
+        if name == '_rounding_native':
+            environment['native_sha256'] = digest
+print(json.dumps(dict(environment=environment, native_files=native_files)))
+'''
+    env = dict(os.environ, A22_PHYSICAL_EPSILON=campaign['parameters']['epsilon_relative'])
+    with tempfile.TemporaryDirectory(prefix='a22-runtime-') as diagnostics:
+        out = subprocess.run([sys.executable, '-I', '-B', '-c', code, str(engine), diagnostics],
+                             env=env, capture_output=True, text=True, timeout=600)
+    if out.returncode != 0:
+        raise RuntimeError('engine could not be loaded: ' +
+                           (out.stderr.strip().splitlines() or ['?'])[-1][:300])
+    return json.loads(out.stdout.strip().splitlines()[-1])
 
 
 def report(name, ok, detail=''):
@@ -87,7 +161,8 @@ def outputs_checks(campaign, tmp):
     check('commutation audit', commutations)
 
 
-def engine_checks(engine):
+def engine_checks(engine, check_runtime=False):
+    start = len(RESULTS)
     top = {'run.py', 'build_native.py', 'build_all_native.py', 'launch_fresh.py', 'reference/full_model_reference.md'}
 
     binary_suffixes = ('.so', '.pyd', '.dll', '.dylib', '.o')
@@ -114,23 +189,27 @@ def engine_checks(engine):
     check('as-run engine sources and binaries', contents)
 
     def identity():
-        campaign_file = REPO / 'campaign' / 'campaign.json'
-        campaign = json.loads(campaign_file.read_text())
-        code = ("import json,run;from pathlib import Path;"
-                "cfg=json.loads(Path(%r).read_text());"
-                "e,a,t=run.initialize(Path(%r));"
-                "print(a.canonical_hash({'sources':run.identity(),'environment':cfg['environment'],"
-                "'parameters':cfg['parameters'],'precision':160,'symbols':run.affine_iv_kmax()}))"
-                % (str(campaign_file), str(Path(tempfile.gettempdir()) / 'a22_identity_diagnostics')))
-        env = dict(os.environ, A22_PHYSICAL_EPSILON=campaign['parameters']['epsilon_relative'])
-        out = subprocess.run([sys.executable, '-B', '-c', code], cwd=engine, env=env, capture_output=True,
-                             text=True, timeout=600)
-        if out.returncode != 0:
-            raise RuntimeError('engine not importable here: ' + (out.stderr.strip().splitlines() or ['?'])[-1][:200])
-        got = out.stdout.strip().splitlines()[-1]
-        report('campaign kernel_id recomputed from the as-run engine', got == campaign['kernel_id'],
+        campaign = json.loads((REPO / 'campaign' / 'campaign.json').read_text())
+        got = archived_kernel_id(engine, campaign)
+        report('archived kernel_id (files and recorded environment)', got == campaign['kernel_id'],
                f'{got[:16]}... vs {campaign["kernel_id"][:16]}...')
-    check('campaign kernel_id recomputed from the as-run engine', identity)
+    check('archived kernel_id (files and recorded environment)', identity)
+
+    if check_runtime:
+        def runtime():
+            if not all(RESULTS[start:]):
+                raise RuntimeError('runtime loading skipped because static engine checks failed')
+            campaign = json.loads((REPO / 'campaign' / 'campaign.json').read_text())
+            loaded = runtime_environment(engine, campaign)
+            actual, expected = loaded['environment'], campaign['environment']
+            differences = [f'{key}: loaded {actual.get(key)!r}, recorded {expected.get(key)!r}'
+                           for key in sorted(set(actual) | set(expected)) if actual.get(key) != expected.get(key)]
+            binaries = {str(p.relative_to(engine)): sha(p) for p in engine.rglob('*')
+                        if p.is_file() and p.name.endswith(binary_suffixes)}
+            if loaded['native_files'] != binaries:
+                differences.append('loaded native binaries do not match the archived binaries')
+            report('loaded engine runtime', not differences, '; '.join(differences) or 'matches the recorded environment')
+        check('loaded engine runtime', runtime)
 
 
 def record_checks(tmp):
@@ -142,8 +221,8 @@ def record_checks(tmp):
     def future():
         terminal = TERMINAL / 'all_terminal_exact.json'
         cert, ind = tmp / 'future_certificate.json', tmp / 'independent_check.json'
-        run('certify_future.py', terminal, cert, '1e-3')
-        run('verify_future.py', terminal, cert, ind, '1e-3')
+        run('certify_future.py', terminal, cert)
+        run('verify_future.py', terminal, cert, ind)
         c, i = json.loads(cert.read_text()), json.loads(ind.read_text())
         rc = json.loads((TERMINAL / 'future_certificate.json').read_text())
         ri = json.loads((TERMINAL / 'independent_check.json').read_text())
@@ -160,15 +239,19 @@ def record_checks(tmp):
 def main():
     if not __debug__:
         raise RuntimeError('Run without -O')
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('campaign', nargs='?', type=Path)
+    parser.add_argument('--engine', type=Path, help='statically verify the archived engine files and identity')
+    parser.add_argument('--check-runtime', action='store_true', help='also require the loaded runtime to match the archive')
+    args = parser.parse_args()
+    if args.check_runtime and args.engine is None:
+        parser.error('--check-runtime requires --engine')
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
-        args = sys.argv[1:]
-        if '--engine' in args:
-            k = args.index('--engine')
-            engine_checks(Path(args[k + 1]).resolve())
-            del args[k:k + 2]
-        if args:
-            outputs_checks(Path(args[0]).resolve(), tmp)
+        if args.engine is not None:
+            engine_checks(args.engine.resolve(), args.check_runtime)
+        if args.campaign is not None:
+            outputs_checks(args.campaign.resolve(), tmp)
         record_checks(tmp)
     failed = RESULTS.count(False)
     print(f'\n{RESULTS.count(True)} PASS, {failed} FAIL')

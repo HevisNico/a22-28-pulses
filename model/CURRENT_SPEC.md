@@ -94,15 +94,20 @@ in a fixed device and learned state, hence exact preservation of source interval
 |---|---|
 | `python3 -I tools/verify.py` | Recomputes the initial and future certificates and Q28 from committed terminal records; normally 4 PASS |
 | Same command with a full campaign directory | Also checks 488 output files and reproduces terminal extraction, lineage/clocks and commutation diagnostics; normally 9 PASS |
-| Same command with the campaign and `--engine` as-run directory | Adds engine-source/binary identity and kernel_id checks; normally 11 PASS with the matching runtime |
+| Same command with the campaign and `--engine` as-run directory | Adds static engine-source/binary identity and archived kernel_id checks using the recorded environment; normally 11 PASS, without importing the engine |
+| Same command with `--engine` and `--check-runtime` | Also loads the engine and checks the actual interpreter, dependency versions and native binaries against the recorded environment; normally 12 PASS with the matching runtime |
 | Fresh `engine/run.py` campaign | Re-executes the training enclosure algorithm with the local build |
 | Lean files | Check selected mathematical lemmas under explicit hypotheses |
 
 The ordinary CI runs engine tests and the first certificate command, plus a separate
-Lean workflow. It does not replay training or check the full release campaign archive.
+Lean workflow and verification-tool regression tests. It does not replay training or check the full release campaign archive.
 Reproduction and matching hashes support correspondence and repeatability; they do
 not replace the source-level soundness argument. The code-to-lemma bridge, event-order
 coverage of the full engine and arithmetic implementation are not formally verified.
+
+The future-certificate generator derives ε from the terminal campaign. The independent checker
+and Q28 builder require the certificate's ε to agree with that campaign; explicit command-line
+values must also agree. The independent report includes `eps`, identifying the width actually checked.
 
 The result does not establish that 28 pulses are minimal, or extend to arbitrary
 waveforms, time-varying parameter drift, noise or unrestricted initial modes.
