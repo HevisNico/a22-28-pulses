@@ -112,6 +112,13 @@ hashes; the enclosed values can then be compared with those of [`terminal/`](ter
 - **Not a qualification of the program.** The assumptions A1–A4 are explicit; the native binaries, the
   compiler and the Python runtime are trusted, not verified.
 
+## Learning comparison
+
+For a paired finite experiment comparing adaptive gains with gains frozen at their
+initial values, see [`experiments/README.md`](experiments/README.md). Recovery remains
+adaptive in both variants; the experiment has its own outputs and does not extend
+the published certificate.
+
 ## History
 
 This result is the outcome of the development recorded in

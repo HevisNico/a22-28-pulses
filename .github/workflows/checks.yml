@@ -26,6 +26,8 @@ jobs:
       - name: Unit tests
         working-directory: engine
         run: python -B -m unittest discover -s tests
+      - name: Learning comparison checks
+        run: python -B -m unittest discover -s experiments/tests
 
   certificates:
     # Recomputes the initial section, the future certificate, the independent check and Q28
