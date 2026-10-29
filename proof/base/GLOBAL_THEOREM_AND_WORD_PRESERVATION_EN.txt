@@ -1,0 +1,108 @@
+A22 v3.3 — GLOBAL FUTURE THEOREM AND EXACT WORD PRESERVATION
+
+The unconditional result proved for the certified section
+
+Fix any admissible physical parameter vector theta. Take any physical state x
+in the quiescent domain Q(theta) specified by invariant_section_domain.json.
+Let s_0,s_1,... be any finite or infinite sequence of canonical source-pulse
+times on lane 0, with s_0 at or after the section and s_(k+1)-s_k >= 20.
+All statements below concern the given ideal hybrid equations and weak-order
+semantics, not arbitrary input currents or additional hidden pulses.
+
+For every such x, theta and source sequence:
+
+1. Each of the 191 active cells fires exactly once per source pulse. The 25
+   inactive cells never fire.
+2. The whole network becomes quiescent before s_k+12.791, returns to Q(theta),
+   and stays in Q during the remaining idle interval.
+3. There is a fixed latency d_(n,j), for each active cell, such that its kth
+   future firing is exactly F_(n,j),k = s_k + d_(n,j).
+4. Consequently every active output preserves the temporal word exactly:
+
+     F_(n,j),k+1 - F_(n,j),k = s_(k+1) - s_k.
+
+The latencies depend on theta AND the influential gains in the chosen entry
+state x. They need not be the same for different admissible entry states or
+for different lanes. This theorem does not assert a universal propagation
+speed, contraction/mixing, or equality of the latency interval endpoints.
+
+For the original training family, these conclusions additionally require
+H_entry: Reach_train(1116; X0(theta)) subset Q(theta). The current dossier has
+not discharged that application premise; see TRAINING_ENTRY_REVIEW_EN.txt.
+
+Proof of return and infinite continuation
+
+The supplied FUTURE_INVARIANCE_PROOF_EN.txt proves items 1–2 using finite,
+strict, uniformly verified guard and protection inequalities. Its two small
+checkers use different arithmetic and series evaluations. The maximum certified
+whole-network settling bound is <12.791, leaving >7.209 before a permitted next
+pulse. Hence no previous wave has an active current at the next input.
+
+The section includes all principal/auxiliary modes, resting charges, gain and
+recovery bounds, reserves and absence of pending physical currents. It allows
+b to increase up to 1.1 and the 15 masked active gains to increase up to their
+own physical caps. It does not incorrectly require every learned variable to
+stay numerically equal to its training value.
+
+For each h>=20, the return map P_h maps Q(theta) into itself. Induction gives
+the result for every finite source word. Gaps of at least 20 prevent infinitely
+many source events in finite time. The finite feedforward graph and finite
+within-wave event count prevent an internal Zeno accumulation. Thus the same
+result holds for all permitted infinite words.
+
+Q is a quiescent section, not the set occupied during the middle of a pulse.
+For continuous-time forward invariance, take the union of Q and the certified
+one-wave trajectory segments, including the source-age clock, modes and active
+pulse states. New source pulses are enabled only after age 20. The return proof
+and idle preservation make this hybrid tube forward invariant.
+
+Proof of fixed latency and exact word preservation
+
+Call an active port influential when it can arrive before the certified first
+firing, and masked when its earliest arrival is strictly after the latest
+firing bound. These classes were checked uniformly over Q. There are 525
+influential active ports, 15 masked active ports and 108 silent ports.
+
+For every influential port, the ERROR phase begins after the main firing and
+ends before reopening. Its gain therefore never changes during a future wave.
+During idle time the port has no ERROR current, so the gain does not change
+then either. Silent gains are also constant. Masked gains may change; their
+raw arrivals always occur after the first firing and end before reopening, so
+they do not influence any future head threshold. Recovery b may change but
+acts only in protection; it does not enter the READY head equation.
+
+Let G denote the vector of these fixed influential gains. At each permitted
+source pulse all active main charges are exactly r and all active auxiliary
+charges are exactly rm. No residual incoming or outgoing current survives.
+
+Induct on network layers. The active source has latency zero. Suppose every
+active parent of a cell has fixed latency d_i. Relative to a new source time
+s, its influential arrivals are at s+d_i. Up to the first threshold, the cell's
+charge is
+
+  q_s(s+u) = r + sum_i G_i h_+(u-d_i),
+
+where h_+(v)=0 for v<=0 and h(v) for 0<v<1. The same formula holds for every
+future wave because G is fixed, all heads start at r, and no influential gain
+changes before firing. Masked ports are absent before the threshold. The
+certificate supplies an increasing first crossing before any raw pulse ends.
+Its latency is therefore the same uniquely determined root d_(n,j) on each
+wave, regardless of s, later gaps, masked gain history or b history.
+
+This proves F_(n,j),k=s_k+d_(n,j), and completes the layer induction. Subtracting
+two consecutive firing times gives exact equality of the inter-event gaps.
+There is no rounding tolerance in this symbolic equality: numerical intervals
+certify the inequalities needed to justify the formula, rather than approximate
+the equality itself.
+
+The statement includes the first future response because Q requires exact r
+for active main charges. A merely nearby READY charge would add a homogeneous
+term and would not justify the same exact first-wave translation argument.
+
+Evidence and limits
+
+The finite future checks cover all 216 cells and all required per-port margins.
+They establish a theorem from Q. They do not establish that every state reached
+by the training computation is a physical state in Q. Terminal-file identity,
+H1/H2 checks and matching hashes cannot replace that missing training soundness
+link. This distinction is part of the theorem, not an optional disclaimer.

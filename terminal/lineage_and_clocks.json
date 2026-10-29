@@ -1,0 +1,1128 @@
+{
+  "status": "PASS",
+  "campaign": {
+    "environment": {
+      "arithmetic_backend": "native",
+      "native_sha256": "87a53495f570436f8fe41e58dcb6a05f0078fbb034bd01adc3f48162b6e40d02",
+      "numpy": "2.3.5",
+      "python": "3.13.17",
+      "scipy": "1.17.0"
+    },
+    "kernel_id": "b49dca10167d09511d6933d3ca1dbc50ebce16664cb872395f707ab689fa89ae",
+    "parameters": {
+      "epsilon_relative": "0.001",
+      "initial_delta": "1e-5",
+      "training_calendar": {
+        "count": 28,
+        "first": "0",
+        "gap": "8",
+        "last": "216",
+        "source_lane": 0,
+        "terminal_time": "230"
+      }
+    },
+    "run_id": "25e6fa5fa78d4ed7afa804f780a0d92c",
+    "schema": "A22-affine-research-campaign-1",
+    "scientific_status": "experimental_not_qualified"
+  },
+  "cells": 216,
+  "time_nodes": 3922,
+  "time_atom_occurrences": 77783,
+  "distinct_time_atoms": 8615,
+  "conflicting_definitions": 0,
+  "profile_categories": {
+    "continuous": 59122,
+    "branch_union": 2680
+  },
+  "profile_guard_counts": {
+    "fire": 2202,
+    "ready": 2188
+  },
+  "per_cell": [
+    {
+      "layer": 1,
+      "lane": 0,
+      "payload_sha256": "d780d6629428cec39f699a363ec52ba90b9fe2190047a646cb0021264ccd9f5f"
+    },
+    {
+      "layer": 1,
+      "lane": 1,
+      "payload_sha256": "a3f94318439aa1ee213aea7cdb2c66869f1cba2e8022f9d67faee44e1b8e3fea"
+    },
+    {
+      "layer": 1,
+      "lane": 2,
+      "payload_sha256": "1dde88dfde42ebf77d3d386855c726775c634236711e30fc357bd0ae69d9cfd2"
+    },
+    {
+      "layer": 1,
+      "lane": 3,
+      "payload_sha256": "61961727974258b02ca1ec714daea04580f0510481e0d3027efecedea327fb59"
+    },
+    {
+      "layer": 1,
+      "lane": 4,
+      "payload_sha256": "4d1049722168d346987b796b41b8bf998aa53ee3b58104136cfc6e414a13aca3"
+    },
+    {
+      "layer": 1,
+      "lane": 5,
+      "payload_sha256": "5a73898900fe336fb6074ff4304b78488237e8a80d63231894f36cd816562b2f"
+    },
+    {
+      "layer": 1,
+      "lane": 6,
+      "payload_sha256": "ee5544d1e9c25b6a694763b55e5ab06a4ae876be4f572da47c810508f586f9a8"
+    },
+    {
+      "layer": 1,
+      "lane": 7,
+      "payload_sha256": "13309540ce4f2c5276b8fd333e8f797928785311a74b90d5147da080409494ed"
+    },
+    {
+      "layer": 1,
+      "lane": 8,
+      "payload_sha256": "6f24b35b23e467f62906d1d33b6690b180d37ecf4b9c04d17b865cc9076907b5"
+    },
+    {
+      "layer": 1,
+      "lane": 9,
+      "payload_sha256": "16d538f76b9987093e7c57676b8e347424b8d9fccdda0c27b98ed5be2fd6b841"
+    },
+    {
+      "layer": 1,
+      "lane": 10,
+      "payload_sha256": "de1c1a3ec703e6863d757053c65cf70f50c1fa8e05fe04666424532f3eeef9bd"
+    },
+    {
+      "layer": 1,
+      "lane": 11,
+      "payload_sha256": "0ce4efd771609e4cbd2a425e566fcfdbe559fb7fa065023888740a26f02a1871"
+    },
+    {
+      "layer": 2,
+      "lane": 0,
+      "payload_sha256": "ab928d2f3c3f31cb4fa61ebe093ef9e49b13b93bdab2d2c0b66f978b6aeb63bb"
+    },
+    {
+      "layer": 2,
+      "lane": 1,
+      "payload_sha256": "ee6c35d57cb87835c8ba50114e48eb6486a2cf5a38f80fe4469e64a7eea0910c"
+    },
+    {
+      "layer": 2,
+      "lane": 2,
+      "payload_sha256": "8c711b7ecea78a035413c2127c6123289083282b69c1d7a207f79eb5ac3345e5"
+    },
+    {
+      "layer": 2,
+      "lane": 3,
+      "payload_sha256": "4d0c683e6069fd87a6870e97f5f5f035ad427861a9696cc9904efac111959323"
+    },
+    {
+      "layer": 2,
+      "lane": 4,
+      "payload_sha256": "bc2c05678a52de75238a07c1bd4d72921ac4f299f10f083f220be1e7c893c163"
+    },
+    {
+      "layer": 2,
+      "lane": 5,
+      "payload_sha256": "c31424be14460ec76c256e1906414aa9f59cd76446f02ada91146732927ec40f"
+    },
+    {
+      "layer": 2,
+      "lane": 6,
+      "payload_sha256": "d57df7d0dd81e85f45cb7e66dc2e302d0cf2a7791fa8c7c7b2baf837b4275a71"
+    },
+    {
+      "layer": 2,
+      "lane": 7,
+      "payload_sha256": "cc930f6c72a2d565ea195dda7787df8a1850ba5e7d67a7c448e250a31b5dd93e"
+    },
+    {
+      "layer": 2,
+      "lane": 8,
+      "payload_sha256": "ee8682effc42f4e7354bde4f4a00206252002e448e350dd9fd999acec68abaa9"
+    },
+    {
+      "layer": 2,
+      "lane": 9,
+      "payload_sha256": "9599f22f1276526067b4ef71a5550d4f28058a819ff303929cfad80fb42edd49"
+    },
+    {
+      "layer": 2,
+      "lane": 10,
+      "payload_sha256": "e2a693e42a100ca7ebc69f814e234cd5e9e924f2dfc1a53eb348b6a1e59be5ad"
+    },
+    {
+      "layer": 2,
+      "lane": 11,
+      "payload_sha256": "6af679863ac03dab7f4f5e246939de49ba1a458b2532942d6029ea4d9c810f5d"
+    },
+    {
+      "layer": 3,
+      "lane": 0,
+      "payload_sha256": "1709449626c3d5a080a05adcb40a0b8245482c4eb2c299eb133d9250e3c2bb47"
+    },
+    {
+      "layer": 3,
+      "lane": 1,
+      "payload_sha256": "a56a884700e26a81b3a4c4e3df437da11a7336875c20bc79d2fd113da21d1986"
+    },
+    {
+      "layer": 3,
+      "lane": 2,
+      "payload_sha256": "718442edb2a1b82d9f9295e0b9eefb219a16ac9996b19b3bdf9514391a0c4efa"
+    },
+    {
+      "layer": 3,
+      "lane": 3,
+      "payload_sha256": "000491c75b672b4d1ee32d776654a1d476f86aa5fc767056a125431d280c3ca5"
+    },
+    {
+      "layer": 3,
+      "lane": 4,
+      "payload_sha256": "87a2bc05dd76210b6bacd122417e2076e2d936d255e9b33a6c2b9da70e5bc8b8"
+    },
+    {
+      "layer": 3,
+      "lane": 5,
+      "payload_sha256": "900835cc72b93183360af1e1929429970753c6da7a38458ae8bdde9481614688"
+    },
+    {
+      "layer": 3,
+      "lane": 6,
+      "payload_sha256": "8909ef2b59fcc0f1a791914583500a46deb482459bf81926371213cbd7f76ff1"
+    },
+    {
+      "layer": 3,
+      "lane": 7,
+      "payload_sha256": "09220e639382ed01c1f1d905a4f0b8d76e9d7fd18eb7ee97ea72404fc1160c80"
+    },
+    {
+      "layer": 3,
+      "lane": 8,
+      "payload_sha256": "9f71e853877f115debc60b34aebf3d69ad52500eaf0b187e51f3b3df4d0c4b1e"
+    },
+    {
+      "layer": 3,
+      "lane": 9,
+      "payload_sha256": "2b3faf7e28711833cdf90a560cd68ba1b4c09a642956fc328640d296713f3a5b"
+    },
+    {
+      "layer": 3,
+      "lane": 10,
+      "payload_sha256": "cd6bd1d2f732bd3c6965b1cf82161de7582bcfdc5485fb272f5bcebfda011c8a"
+    },
+    {
+      "layer": 3,
+      "lane": 11,
+      "payload_sha256": "a696fad810b310b92099324147b3d628659ee5ec66dbe98cc82a2d035f973318"
+    },
+    {
+      "layer": 4,
+      "lane": 0,
+      "payload_sha256": "9a50eac72990fd33af542a54b8d89e7f59c587babe86a3ae0d3d760d8cc4ccde"
+    },
+    {
+      "layer": 4,
+      "lane": 1,
+      "payload_sha256": "ce7365fd2da3dc19e7025168b64a249a2733e955d5602ae47f73b2a82e179380"
+    },
+    {
+      "layer": 4,
+      "lane": 2,
+      "payload_sha256": "e153df96afcd51022d33a9c131421356e7ce0633fc109b728234ae1587b669f6"
+    },
+    {
+      "layer": 4,
+      "lane": 3,
+      "payload_sha256": "c5bbfac7974688c432abcc1eddf853993c14cc807d3cc479c95eb6afaf0164ee"
+    },
+    {
+      "layer": 4,
+      "lane": 4,
+      "payload_sha256": "71d975c9a62e8a35e4fb45ccaf5aec039e182dce8f10587e4a5782dcaaeb89bb"
+    },
+    {
+      "layer": 4,
+      "lane": 5,
+      "payload_sha256": "d151cf2287b9033e43cba943e341af95a8a7267f53c13d61ba7df0074f8c7247"
+    },
+    {
+      "layer": 4,
+      "lane": 6,
+      "payload_sha256": "1c4d97e4a8a5dd4dce343561861bab2a5646b2abd0311c567fc7fa6a1e4fd0c0"
+    },
+    {
+      "layer": 4,
+      "lane": 7,
+      "payload_sha256": "87282d95f544fd16e81f9228a0bbe6f572dac4ff2730e0fb8a9881f128350073"
+    },
+    {
+      "layer": 4,
+      "lane": 8,
+      "payload_sha256": "6b9e4bd6801406e6707d44c7da43b481c57cd09a5b96cf66dcad713d272c848d"
+    },
+    {
+      "layer": 4,
+      "lane": 9,
+      "payload_sha256": "38091c686ebed72a56dbd911562669c1dab420a32e42b593cb2adaf8b259f52f"
+    },
+    {
+      "layer": 4,
+      "lane": 10,
+      "payload_sha256": "98e6f0d4878dda40678b5ad84dad7e83fc0dc11bee025064f52e6596a28f4f26"
+    },
+    {
+      "layer": 4,
+      "lane": 11,
+      "payload_sha256": "4b66ad95059f684dd5e9f532ffab6f60f4b5d74c0d9e9dcecde22d2ca479f12d"
+    },
+    {
+      "layer": 5,
+      "lane": 0,
+      "payload_sha256": "4bf2580e64aa5ed5281268bea8f2aece1b1876f5f0c9c6fdf59d46e1577f476e"
+    },
+    {
+      "layer": 5,
+      "lane": 1,
+      "payload_sha256": "e9217bdeb27bcfce505f13c344136683c65361b5bd1cd51b96031ea1577f3a16"
+    },
+    {
+      "layer": 5,
+      "lane": 2,
+      "payload_sha256": "486e8afb0a822491558413b754159624bdf2e068778703b88f801c7fa94610c2"
+    },
+    {
+      "layer": 5,
+      "lane": 3,
+      "payload_sha256": "518b4dd8eb4774268afe618f777c9c55f8a06373e6772baccaff7e0f705e1c36"
+    },
+    {
+      "layer": 5,
+      "lane": 4,
+      "payload_sha256": "34a4fec5e1f092afe723088ecc82c04c534790cb8e095e4b027e577914f2b95b"
+    },
+    {
+      "layer": 5,
+      "lane": 5,
+      "payload_sha256": "0a162baf1fbbba74653c45044577a53d183527f73a9e9a324f9800ef744debb3"
+    },
+    {
+      "layer": 5,
+      "lane": 6,
+      "payload_sha256": "16455faa18bc86264b6b3ec0a6bfb832ba6072e5d085cf362a39e561ac11dc0e"
+    },
+    {
+      "layer": 5,
+      "lane": 7,
+      "payload_sha256": "ed9773be111b1091455ea0ac55433ef1c8fedc9b6d06887b9b8abff9f65bb16b"
+    },
+    {
+      "layer": 5,
+      "lane": 8,
+      "payload_sha256": "fb27f9b57f9e76fce8c599121ec5db4047d5cebf0bb4ea8391ef5f40e48e2515"
+    },
+    {
+      "layer": 5,
+      "lane": 9,
+      "payload_sha256": "5f050c8f7a81163970a5902c9e395d8f1c5235635ac93640bd89c74e74ada54f"
+    },
+    {
+      "layer": 5,
+      "lane": 10,
+      "payload_sha256": "190d4c90685327bdc0f9995a1551dbbf94be12e990950da49c5572622338fc07"
+    },
+    {
+      "layer": 5,
+      "lane": 11,
+      "payload_sha256": "238f07c45614decf3e91003321823c61c8b668c05248f316b2a5964b78ac888d"
+    },
+    {
+      "layer": 6,
+      "lane": 0,
+      "payload_sha256": "ba426aec3846a754bc91f2a1b30465b1add0385c466c51848d7eafbfbb2ebf07"
+    },
+    {
+      "layer": 6,
+      "lane": 1,
+      "payload_sha256": "79a826bbe904e55c5c8fff484aa1359ffbb90fb2a65b304ba7d75dd643d1c8e1"
+    },
+    {
+      "layer": 6,
+      "lane": 2,
+      "payload_sha256": "8ce7cab851e059dab8d71e4d5b466bf95c85204e39c5bff911f0c96726ced6fb"
+    },
+    {
+      "layer": 6,
+      "lane": 3,
+      "payload_sha256": "cf7900830ccd22e2b27254f5e676db91698dc370aea79cfdf6ad0cb26bd3083b"
+    },
+    {
+      "layer": 6,
+      "lane": 4,
+      "payload_sha256": "481d5c0c6f56d43048daa8e0b741008b301e3f1c08d79123d43d6fe0de9aad50"
+    },
+    {
+      "layer": 6,
+      "lane": 5,
+      "payload_sha256": "957448dcfd847d42dd589d214e86cb912fd1aa1e6f82ceee37ea46d90481ce3f"
+    },
+    {
+      "layer": 6,
+      "lane": 6,
+      "payload_sha256": "4255151a080c7100e7a4debf8a3ab785b6c8f86eec8ec7e0f475ca0be90036c4"
+    },
+    {
+      "layer": 6,
+      "lane": 7,
+      "payload_sha256": "5a03a3ebd6751fea3a79d4820a238a4186ba2678f7400a845dc570983bc739d7"
+    },
+    {
+      "layer": 6,
+      "lane": 8,
+      "payload_sha256": "6bd3f5409ffb8a01524ed7ad1547b345767246e96ee18280f550fe22fba074d2"
+    },
+    {
+      "layer": 6,
+      "lane": 9,
+      "payload_sha256": "c10cf47f336ae9870d1767fdd9474ec6ae86901d269ba51f08bc370ba03a1a38"
+    },
+    {
+      "layer": 6,
+      "lane": 10,
+      "payload_sha256": "3fb57c51eea9e97b65df7df604588ea9d850999533fa59d0b644fa0a980b0ff2"
+    },
+    {
+      "layer": 6,
+      "lane": 11,
+      "payload_sha256": "04a99f93dc229a6abc525cd76c72c75aca60a1999fced81f69a7d9e7b665fd0e"
+    },
+    {
+      "layer": 7,
+      "lane": 0,
+      "payload_sha256": "131ccdf9bbbdadc91aece7744774c75d7322aac14a3a5f1ee151848fc1af9aed"
+    },
+    {
+      "layer": 7,
+      "lane": 1,
+      "payload_sha256": "9c2504c5df861f3f908ddc8ac1ca1d2136d68ca0c5e55efda2f8bbf1d1cc43f6"
+    },
+    {
+      "layer": 7,
+      "lane": 2,
+      "payload_sha256": "032ef9f4224742d23bea27b48fadbe5f3063ab9500a3d6a2b33ef2802f920b33"
+    },
+    {
+      "layer": 7,
+      "lane": 3,
+      "payload_sha256": "94882231e98a6f31a731b4e07e3b9467ca3366540b4df0bd168b76e4879fadf6"
+    },
+    {
+      "layer": 7,
+      "lane": 4,
+      "payload_sha256": "f5e4702f06e8938c192202725c161fca8d266b965995ac7a3fb5c87c6e2d961a"
+    },
+    {
+      "layer": 7,
+      "lane": 5,
+      "payload_sha256": "953dad14318d99f520d9813402105319fd49779c1abe0213bbeaf1c8ac0c69c6"
+    },
+    {
+      "layer": 7,
+      "lane": 6,
+      "payload_sha256": "2e0c9eb4823175b37574e67faeffe551b592fd58a1696fabc239d5c1cc8768c2"
+    },
+    {
+      "layer": 7,
+      "lane": 7,
+      "payload_sha256": "b48e3630c0f45b3cb93f787860e9472d4688edb78b9084d897127050c01f827f"
+    },
+    {
+      "layer": 7,
+      "lane": 8,
+      "payload_sha256": "197c9e1cd794a29b0f68e767b0630c78ced9f3ef91652a3348a3a6f817abb7bd"
+    },
+    {
+      "layer": 7,
+      "lane": 9,
+      "payload_sha256": "faa5b51c82179362bcae50dd42f2750c8e8e8d7b5cf456b8d828ddd7daa3fab7"
+    },
+    {
+      "layer": 7,
+      "lane": 10,
+      "payload_sha256": "44e214a5344f485101dc67f0d975276f8fc6b66ab8dd8f6a65d5a273515a321f"
+    },
+    {
+      "layer": 7,
+      "lane": 11,
+      "payload_sha256": "c5fbf27775723867df88c4a8e30d21296f0bdb0f7774309ed93e65867f86b0e2"
+    },
+    {
+      "layer": 8,
+      "lane": 0,
+      "payload_sha256": "0c8bbb9437f1381fe32daa888563c04b0609f85abdca6df3c75cf20e1c8441a0"
+    },
+    {
+      "layer": 8,
+      "lane": 1,
+      "payload_sha256": "2bb5e0b864d87316e8548e7e5986219a81b1c29174894b3838fcee0f5ac1cade"
+    },
+    {
+      "layer": 8,
+      "lane": 2,
+      "payload_sha256": "04f8b3e91d0b69282f2d4e90540ad78eac54ac2c3d6a736f8a3790fcfae16349"
+    },
+    {
+      "layer": 8,
+      "lane": 3,
+      "payload_sha256": "95885d760f721916c3e62fb8153b9cf184a92425ef6a7e2e8e470284e77e5c80"
+    },
+    {
+      "layer": 8,
+      "lane": 4,
+      "payload_sha256": "5a9e8f557a068731626e57bac2a72b263e32bf9759f97c8fbb7c29426b32ad71"
+    },
+    {
+      "layer": 8,
+      "lane": 5,
+      "payload_sha256": "b27f83dc6d6881678ad317d9f4a005b01e81ca51d7c4929c72c87907b579f431"
+    },
+    {
+      "layer": 8,
+      "lane": 6,
+      "payload_sha256": "8945b164cf0a3418455c8c56af38a779ef4401199c4ab9d5eeedb3ad7b8f4ff0"
+    },
+    {
+      "layer": 8,
+      "lane": 7,
+      "payload_sha256": "c1559719a9025abcac316f3152ef6b335c8b8f0718bba66a6c66ce166b9d1792"
+    },
+    {
+      "layer": 8,
+      "lane": 8,
+      "payload_sha256": "2b5d568c84198624d26d37c7c736d7e67bb036b695af18ddb0d038ef69be5472"
+    },
+    {
+      "layer": 8,
+      "lane": 9,
+      "payload_sha256": "8a292545e1384d83faa3ea2e316961d1f77ed94cc3177a7fce068b1fa1301eaa"
+    },
+    {
+      "layer": 8,
+      "lane": 10,
+      "payload_sha256": "2e6444a0e126314b2fe8181cac9294ddd9cc3e03b4dc3d8abb58feae1bd0488d"
+    },
+    {
+      "layer": 8,
+      "lane": 11,
+      "payload_sha256": "32258ee904784e12144505511898e7266c3eee0146237c9cede0d4e622d9af35"
+    },
+    {
+      "layer": 9,
+      "lane": 0,
+      "payload_sha256": "4f54bc619054f8b2716fe3a7d5f99407fc72f0aad930d1eee5d868730e088d1f"
+    },
+    {
+      "layer": 9,
+      "lane": 1,
+      "payload_sha256": "c71b55b60656178a8cf12b9a87c3040e16e2d79d9ebe46ca358e0ca3e6c68ca4"
+    },
+    {
+      "layer": 9,
+      "lane": 2,
+      "payload_sha256": "77451d481278725ea2a288f0b2c256f401fc84ac710e22c2dcc8bf13e88d0836"
+    },
+    {
+      "layer": 9,
+      "lane": 3,
+      "payload_sha256": "315477e0397534f4a3077217a35006c3006e9368ba20e03d841487b3702da93c"
+    },
+    {
+      "layer": 9,
+      "lane": 4,
+      "payload_sha256": "4dbea309dd5ef0313005fd56fa6fe1b3381588e9b1ec0bf02d09c5f506947bd2"
+    },
+    {
+      "layer": 9,
+      "lane": 5,
+      "payload_sha256": "284bae54ed7acf0072b17b49add137e7e9736e3e901b7f23b2a9267b0d98d029"
+    },
+    {
+      "layer": 9,
+      "lane": 6,
+      "payload_sha256": "016c8259e5a7a46eb6bffa9f00b924a7093d9de33546b440d0a32a76dc73fb96"
+    },
+    {
+      "layer": 9,
+      "lane": 7,
+      "payload_sha256": "035a419df9b9746e04375804af690c8874ccd53c07bad4cd8a213be61358526b"
+    },
+    {
+      "layer": 9,
+      "lane": 8,
+      "payload_sha256": "4672bca27ab728274626b772c2f1bf7c61ccc55c805e5753afccb55bafed6925"
+    },
+    {
+      "layer": 9,
+      "lane": 9,
+      "payload_sha256": "5e2216b5362caf5abba0055ee1274736e0a6367b8747f2e1ef2ef67567c2d626"
+    },
+    {
+      "layer": 9,
+      "lane": 10,
+      "payload_sha256": "120dd8baf9964ba1eafb3e5d9efa0119411053aa6f5881754c7d89c1dac9fb77"
+    },
+    {
+      "layer": 9,
+      "lane": 11,
+      "payload_sha256": "58d035793412405afc065715be8c3d91b5345416774cea7a9e69b8803e589e6c"
+    },
+    {
+      "layer": 10,
+      "lane": 0,
+      "payload_sha256": "aa24218b6ae2b7d9f069ad9ea0da6331eb00861f624a180dc1ebe97393f68a2c"
+    },
+    {
+      "layer": 10,
+      "lane": 1,
+      "payload_sha256": "9c58792adeb980c2b3c03d0a1357ed79e730d9fcc01282d6446137867fcb69d5"
+    },
+    {
+      "layer": 10,
+      "lane": 2,
+      "payload_sha256": "b5f3da54cab3ad436a5013ffe9b562c65c36ee2e5e96c286e618855d5f6bc9dd"
+    },
+    {
+      "layer": 10,
+      "lane": 3,
+      "payload_sha256": "3ad6c6a99ab7f8abd4a66d040c78e23d1b6fbb5995dd18209643f11b9167a951"
+    },
+    {
+      "layer": 10,
+      "lane": 4,
+      "payload_sha256": "b7924437767b40bc683b70a55743b3ce50868470a4ecae61bd420a2e1eb07c9e"
+    },
+    {
+      "layer": 10,
+      "lane": 5,
+      "payload_sha256": "789feaf0f3d24a47c46dfb9f1d1cf0f3cfb17bfb599ac7c25a0264546b5c5a37"
+    },
+    {
+      "layer": 10,
+      "lane": 6,
+      "payload_sha256": "0ed9d5d03adb9c70eaf771294d029c1c18a22d515dab94ff83d1a3aba3053431"
+    },
+    {
+      "layer": 10,
+      "lane": 7,
+      "payload_sha256": "b1c916ea7997893d7f31eb8c857742aa0c6bc74d6273b39f3e5287a14ee96e3c"
+    },
+    {
+      "layer": 10,
+      "lane": 8,
+      "payload_sha256": "3123bd33bd7402be3aa2f913b344e86e2079689e98236cb11e193b3ed68823da"
+    },
+    {
+      "layer": 10,
+      "lane": 9,
+      "payload_sha256": "352b57b1301aa50aa64680c2663d4fd58ab88a37554ef5637d2330e94fe8c5cc"
+    },
+    {
+      "layer": 10,
+      "lane": 10,
+      "payload_sha256": "30083ed36c48ae6fd8c831998c502fb391ec4f5b2f3ee80fd395d17f7075a628"
+    },
+    {
+      "layer": 10,
+      "lane": 11,
+      "payload_sha256": "3cd73b80c4e2f7249e413c67eddf6149cff3998eeee0509df7e440d3b2102d06"
+    },
+    {
+      "layer": 11,
+      "lane": 0,
+      "payload_sha256": "232192d2082429b06c3daf8d3d47188e7ef528b631eb6d92a7a906bd181ea33e"
+    },
+    {
+      "layer": 11,
+      "lane": 1,
+      "payload_sha256": "21aa3d207cdac7a01d8ee1438679d6edfa118b4d9afdd912f80e1513336295df"
+    },
+    {
+      "layer": 11,
+      "lane": 2,
+      "payload_sha256": "601db6418a052e4ae257687861e6a804e8b9a994fc1a90858e3d9e45d8800570"
+    },
+    {
+      "layer": 11,
+      "lane": 3,
+      "payload_sha256": "93142ccf51105e58907e239d0871e6865523a4e0d49191289612a486904fe72c"
+    },
+    {
+      "layer": 11,
+      "lane": 4,
+      "payload_sha256": "5f03dd040f385c7610c56587f891019334c284a8aae2d1ceceb891957d6c7a10"
+    },
+    {
+      "layer": 11,
+      "lane": 5,
+      "payload_sha256": "5938eeeab5acb98fc5253349d0d501034a597039f7eee99b33c3c03fdc4566df"
+    },
+    {
+      "layer": 11,
+      "lane": 6,
+      "payload_sha256": "aa570d09c8d74929831497d9e79347d8ddbf44fc358b3dfc6346702db22fe6b5"
+    },
+    {
+      "layer": 11,
+      "lane": 7,
+      "payload_sha256": "5c49d2c429824b5496eea8cf18a118b08ce9fbee7e1da2ece1429f7b5ef3697d"
+    },
+    {
+      "layer": 11,
+      "lane": 8,
+      "payload_sha256": "4c6cb9180c4dfc83ad1b0fd19543db471222c89ecc087a6474b82f9717cbfefd"
+    },
+    {
+      "layer": 11,
+      "lane": 9,
+      "payload_sha256": "c0de54bf09352dc23e82cb1e9906ce7e73717afedfcf02de0c1980f779f6f8d2"
+    },
+    {
+      "layer": 11,
+      "lane": 10,
+      "payload_sha256": "c2440245ec0ffa8fafb670fe4b9c793b8360508d359b0c39c80ecca12d10b9ed"
+    },
+    {
+      "layer": 11,
+      "lane": 11,
+      "payload_sha256": "11503cd56e010017ebd6330c1c7245c761323bc088520fff6833550eb77af7c9"
+    },
+    {
+      "layer": 12,
+      "lane": 0,
+      "payload_sha256": "a8b20c1dd9db0b8adb43b2b144edd163e289ff6cb680cc23cd0c396538bf6bb2"
+    },
+    {
+      "layer": 12,
+      "lane": 1,
+      "payload_sha256": "699c906bf2decba980862465c03e846ebff28299db43c64d8412ef946087c11f"
+    },
+    {
+      "layer": 12,
+      "lane": 2,
+      "payload_sha256": "531260e86b410e5ded601748ae3d1a5a296eaea3f101262ae6d4240a42967649"
+    },
+    {
+      "layer": 12,
+      "lane": 3,
+      "payload_sha256": "165f12091fb2913d30f2a891e46c09cc139a09e99b3ec5e6204f4ee9e1b4ac10"
+    },
+    {
+      "layer": 12,
+      "lane": 4,
+      "payload_sha256": "79ff164a599857dcfa122fe93800c31f641aa7dd472c7092cefea8626f473a3f"
+    },
+    {
+      "layer": 12,
+      "lane": 5,
+      "payload_sha256": "1af60e0ed0f4c7f57b43f650a36ba9fc69c2ac8177ff2dc5ec28189d452b5d0b"
+    },
+    {
+      "layer": 12,
+      "lane": 6,
+      "payload_sha256": "b4cbe7f2d87076cd76130cce525d413853ca6c356f29cb177e6cc22c195fd086"
+    },
+    {
+      "layer": 12,
+      "lane": 7,
+      "payload_sha256": "73c9b52c55c00f180953011748ccc9701c3c4785d08416b5048955d30853a51d"
+    },
+    {
+      "layer": 12,
+      "lane": 8,
+      "payload_sha256": "4ab36b1f9d856544050bc4c5c7f48f64ebba902cd302ae63386a71695b796610"
+    },
+    {
+      "layer": 12,
+      "lane": 9,
+      "payload_sha256": "7f01ddf76942b8e4aa83c4bc538446b42d85ffc67cf5267b8c9d4536e5ae2bf6"
+    },
+    {
+      "layer": 12,
+      "lane": 10,
+      "payload_sha256": "803aefe4d833b543a58714bfa45a854c18fd32cdce04f2ffddf7dddc4dbd6a5f"
+    },
+    {
+      "layer": 12,
+      "lane": 11,
+      "payload_sha256": "7a03d8f5b806a5a211f1911ee33e5447cccefb9ba9add4bfc46009eaed69c2d6"
+    },
+    {
+      "layer": 13,
+      "lane": 0,
+      "payload_sha256": "99098cf3f2576c960ae310fd873c8a568bdb15a87137e7cbf55a1bf2639a6edc"
+    },
+    {
+      "layer": 13,
+      "lane": 1,
+      "payload_sha256": "2675e787777159583672d6c78a219fc6aa3228eeace243639ab5ad5c0b34e267"
+    },
+    {
+      "layer": 13,
+      "lane": 2,
+      "payload_sha256": "2945537766ea9fd79a7ff028c472f1fd36ecbad2672afbd2465f14544673cfbb"
+    },
+    {
+      "layer": 13,
+      "lane": 3,
+      "payload_sha256": "f1873e8cb8bf9adbf5468c5ce2b85c3aa4105cfbbdcc1c8d8cd66bd547f8b243"
+    },
+    {
+      "layer": 13,
+      "lane": 4,
+      "payload_sha256": "6b81fa9bb54dcba4219c115929fd17b65fba7997742859e104cdecf5d2178e98"
+    },
+    {
+      "layer": 13,
+      "lane": 5,
+      "payload_sha256": "fed56c080acece8be5625893ccf27717b1958350b4ab9d245316433bf449e16c"
+    },
+    {
+      "layer": 13,
+      "lane": 6,
+      "payload_sha256": "1c2cf18706c058aaccbc0972631a90bf826b633ecf5c59e352b552d3cf7568ed"
+    },
+    {
+      "layer": 13,
+      "lane": 7,
+      "payload_sha256": "a0a1f232100d616fcaf6bcf3ec36f8c83cdf5b746b0d72a8b6139b140afd3c0b"
+    },
+    {
+      "layer": 13,
+      "lane": 8,
+      "payload_sha256": "b900425a921f3e716fc9b47ec002efa786a1ee0060c881837d392c5764975b7f"
+    },
+    {
+      "layer": 13,
+      "lane": 9,
+      "payload_sha256": "90a8daad981d97ca207647dbe33fc2a70a8ee6b26a24c383a2e33615d2e9156c"
+    },
+    {
+      "layer": 13,
+      "lane": 10,
+      "payload_sha256": "87755537d32864af6d5b607b1003ba157c4da421d21680d753a8ffb3afc873a8"
+    },
+    {
+      "layer": 13,
+      "lane": 11,
+      "payload_sha256": "ceee029aa1276c861cb3930275773d9c1fbc53f71d1800bd37152e53b636b770"
+    },
+    {
+      "layer": 14,
+      "lane": 0,
+      "payload_sha256": "dbed45a6f0472f9d9578ca4d26cf5cf8f2285def5367c39c5491198707caa33e"
+    },
+    {
+      "layer": 14,
+      "lane": 1,
+      "payload_sha256": "1cc018d31fef0358bf3fc7e16db8de330687e41372e489ba413673737aada813"
+    },
+    {
+      "layer": 14,
+      "lane": 2,
+      "payload_sha256": "a838f8918f4f831d63a35972b0877c2d56cadc508611074b02f7d80d8d98c5fa"
+    },
+    {
+      "layer": 14,
+      "lane": 3,
+      "payload_sha256": "8a23bfd572f46ce5776e1a768377b6b80008633462d2a27976ca707578b26501"
+    },
+    {
+      "layer": 14,
+      "lane": 4,
+      "payload_sha256": "1d89c392f8776bfd1026159fb5353c31aa263745b6dedd272894a1042e291dbf"
+    },
+    {
+      "layer": 14,
+      "lane": 5,
+      "payload_sha256": "a5c08225fd679441010032b0ab5948a9bf15337ccc061f5672bd2082f497be17"
+    },
+    {
+      "layer": 14,
+      "lane": 6,
+      "payload_sha256": "205cee8a1e01df18c5773bd2ec5efdf9cec5899b29fdce8425417f92932c6878"
+    },
+    {
+      "layer": 14,
+      "lane": 7,
+      "payload_sha256": "bc3a38e3f6831a3f790b5afb6c63e30795d675a477311778be6b4e995924bc90"
+    },
+    {
+      "layer": 14,
+      "lane": 8,
+      "payload_sha256": "00140eceae05a1744ced0bb412ca97a944fbb497cf20d25bf312af98c3d08166"
+    },
+    {
+      "layer": 14,
+      "lane": 9,
+      "payload_sha256": "3a3f67d10befb938e4ad482b98355376d17e3d81bdde8d2857e5dc8fc0831751"
+    },
+    {
+      "layer": 14,
+      "lane": 10,
+      "payload_sha256": "9d6107ace1ca0902118efbf6883c0a8f84f6cea6cd2f66073dad69597ad0ff60"
+    },
+    {
+      "layer": 14,
+      "lane": 11,
+      "payload_sha256": "54c9720a0bd199283cadc19f44f8d0c7c1b2a9fd07b398bc5b3ce7f18b8d8c26"
+    },
+    {
+      "layer": 15,
+      "lane": 0,
+      "payload_sha256": "d0f9a341813e78aa553467ae3e340267cb5eda6946da231ddafa646d1bbae134"
+    },
+    {
+      "layer": 15,
+      "lane": 1,
+      "payload_sha256": "5563eec93314bc2b64e953db279ee87823da79cc57fb0dbbf3fe3ca9364213e5"
+    },
+    {
+      "layer": 15,
+      "lane": 2,
+      "payload_sha256": "15ed2cbed67c141b93b64d6242d4cbe74a24759a87c36781c01826033b0c7cb8"
+    },
+    {
+      "layer": 15,
+      "lane": 3,
+      "payload_sha256": "3d25f03e4a564bc4a73e99406f1858b4d47ce0699bedada288231e5355d4f364"
+    },
+    {
+      "layer": 15,
+      "lane": 4,
+      "payload_sha256": "7681b95a18ae14dc27b51f6555f5f642d77a396bad0e03cac094d6b72262daf1"
+    },
+    {
+      "layer": 15,
+      "lane": 5,
+      "payload_sha256": "cd5217c4ac7ea61c6160b618f018657ac93ce3874c57fb972638fe7cf6e29167"
+    },
+    {
+      "layer": 15,
+      "lane": 6,
+      "payload_sha256": "a1d85623173c4e3410605ef311823e846f5ddc2cc62e86fa73bc7e2e4d174bce"
+    },
+    {
+      "layer": 15,
+      "lane": 7,
+      "payload_sha256": "4ac3076660a897b96fec4d471c344eac5161ab94d35eb11bada84623f900d41d"
+    },
+    {
+      "layer": 15,
+      "lane": 8,
+      "payload_sha256": "043117b8c450a8684dcea1437aecc6a531fd9bfea899be99bd59d8fcf2746234"
+    },
+    {
+      "layer": 15,
+      "lane": 9,
+      "payload_sha256": "61899b28427e4e4e81f33adcc4856e2a4d621d0e000778423fa1a2e8ec305570"
+    },
+    {
+      "layer": 15,
+      "lane": 10,
+      "payload_sha256": "df3f55ad0fb9600305cbd50df2c10e41d8b1b855fdfabf18933a0207b9beffea"
+    },
+    {
+      "layer": 15,
+      "lane": 11,
+      "payload_sha256": "57efbd5e77467acb866278a87e2fa9922cd07dec0e4649780f794750527a1e9f"
+    },
+    {
+      "layer": 16,
+      "lane": 0,
+      "payload_sha256": "22f0ef5a425da35c9d8ff3d204110d400e4eae53c7e250b212f2ba96a6dd2995"
+    },
+    {
+      "layer": 16,
+      "lane": 1,
+      "payload_sha256": "4f90e231ab85076ff0fc932255d042d9108d31352a2c553f42e9c74ffee0b2ba"
+    },
+    {
+      "layer": 16,
+      "lane": 2,
+      "payload_sha256": "ee02e5cd5084ffdb2976b28cb012e26f252a3a829d70eb6447fefbec6bc67433"
+    },
+    {
+      "layer": 16,
+      "lane": 3,
+      "payload_sha256": "4aab15a95c5e773a4c345a7ba60aa652b8f78b84f09773de25cc0b1068038ddc"
+    },
+    {
+      "layer": 16,
+      "lane": 4,
+      "payload_sha256": "61169334485eb8769e7cc2e9e3ae67bde707c428b2138fe05ff7b98c2e87f7f0"
+    },
+    {
+      "layer": 16,
+      "lane": 5,
+      "payload_sha256": "bd93c873de77403e1af8d3654a125556d17a0ae03c672dec712eb62643bb693b"
+    },
+    {
+      "layer": 16,
+      "lane": 6,
+      "payload_sha256": "b2426f4fa92544b9d6fc4c9e159fc5283ce31817b00f5c43e1bea2f23e59d71f"
+    },
+    {
+      "layer": 16,
+      "lane": 7,
+      "payload_sha256": "e335182c4a2190523a874ff84a5017481ee5d141e421b7e763b2b37f40c2b2f2"
+    },
+    {
+      "layer": 16,
+      "lane": 8,
+      "payload_sha256": "b7c778273da9694f17b48c360009981cacf623c8202108bf1ffcbd917e06bab4"
+    },
+    {
+      "layer": 16,
+      "lane": 9,
+      "payload_sha256": "a7c907914e2083b7bdf6d6eb0a22742ac9946dcd01c3a8f98f61aad74b96cb11"
+    },
+    {
+      "layer": 16,
+      "lane": 10,
+      "payload_sha256": "222693dba684cd1cc31dedd662e7b116423d718f697534efc988385e19404647"
+    },
+    {
+      "layer": 16,
+      "lane": 11,
+      "payload_sha256": "7b766f5909e3e8eef96969aa0a9ee26208ed2b19e511de0754d70c18c6c38504"
+    },
+    {
+      "layer": 17,
+      "lane": 0,
+      "payload_sha256": "7279bfc4c220ff852b0df826f59f6f8f1b6be5ad493ccb3c88142b23f4bbf738"
+    },
+    {
+      "layer": 17,
+      "lane": 1,
+      "payload_sha256": "e911aee3ae04f1e0f249cff44d11cfba3c5ea53532a02b906407422d605aa314"
+    },
+    {
+      "layer": 17,
+      "lane": 2,
+      "payload_sha256": "681901a1c807ccacfef2f07606880349770d90b365c4f05bf673759b1b24d043"
+    },
+    {
+      "layer": 17,
+      "lane": 3,
+      "payload_sha256": "61c5b07d8f5ae66e29948fdfcd246bb712ea1cdf17060b9eddaff5170902d839"
+    },
+    {
+      "layer": 17,
+      "lane": 4,
+      "payload_sha256": "b9bbee34bc957f6118ec6abaa064c5d5ce92c3605f168bca6704c0774e43d69d"
+    },
+    {
+      "layer": 17,
+      "lane": 5,
+      "payload_sha256": "a6ca031823e85219d37f983f1f5fd07974bdd1027f710647232968a1f8244832"
+    },
+    {
+      "layer": 17,
+      "lane": 6,
+      "payload_sha256": "7b2eebc91fa97b324478fe423d27f15ab7aa6df9a2eb035b5cb3bcf8f3f37d2e"
+    },
+    {
+      "layer": 17,
+      "lane": 7,
+      "payload_sha256": "b44eaa24c0db69db96f9a3008f8f2c98be8fbd3bca25624dea462cec8da08c35"
+    },
+    {
+      "layer": 17,
+      "lane": 8,
+      "payload_sha256": "3028bc9eee9c0457435e744beab12b25831d574f2456881536b31403b65e2db5"
+    },
+    {
+      "layer": 17,
+      "lane": 9,
+      "payload_sha256": "b8da68bf8c1912290f0587f0a221454f67529e78e60c629a5ca7908bc6ee5432"
+    },
+    {
+      "layer": 17,
+      "lane": 10,
+      "payload_sha256": "24c5cd39ec013c9725cf87f6fb24e4cb74877c065350817f9af1cdcd816ff820"
+    },
+    {
+      "layer": 17,
+      "lane": 11,
+      "payload_sha256": "6a40559b9e7f84d706603f892b7fe3025cc821cca12b015101a5beec49a492dc"
+    },
+    {
+      "layer": 18,
+      "lane": 0,
+      "payload_sha256": "8f7344e03a78bf80e812205d1a5a4996ab654909e3845dcd1486fb83c391298b"
+    },
+    {
+      "layer": 18,
+      "lane": 1,
+      "payload_sha256": "7c8e1636725d8d2cfc49c6630161e91cdc8ae8d1bd46c884b22b98be0a9e62a9"
+    },
+    {
+      "layer": 18,
+      "lane": 2,
+      "payload_sha256": "7b9ec16de29b2895e049338acd95a23de60a5757e17d379d1628bb0cb4c1e461"
+    },
+    {
+      "layer": 18,
+      "lane": 3,
+      "payload_sha256": "ea9eb2eae325dff3aea9fa855899b3c7f91f8f877ae34f6db5cfbfed19217237"
+    },
+    {
+      "layer": 18,
+      "lane": 4,
+      "payload_sha256": "1b89b76300b2a63d87194c2b7b4c6b08474ede53661bdb151c3b5671c3e22701"
+    },
+    {
+      "layer": 18,
+      "lane": 5,
+      "payload_sha256": "3989a7ceddeea79054cd2207435f13e6f8f23a9e023e6c0a0a79fed0e4ec4c9e"
+    },
+    {
+      "layer": 18,
+      "lane": 6,
+      "payload_sha256": "d7fda7c36d54d938de60f041c27afc18973485e72f048cf99b9a5d86e795f1f5"
+    },
+    {
+      "layer": 18,
+      "lane": 7,
+      "payload_sha256": "302672a58ba1577940f940f17849a9db634ac170e0299df5bb312fbf21a48c01"
+    },
+    {
+      "layer": 18,
+      "lane": 8,
+      "payload_sha256": "498c66dc4ee96bd9af65faf621cccc3903e6f2be6426746faddad7ba71e71c98"
+    },
+    {
+      "layer": 18,
+      "lane": 9,
+      "payload_sha256": "294655c4371a6a507ecb1b106fa5ea9aa118fcb9000177913f23ee8e99216079"
+    },
+    {
+      "layer": 18,
+      "lane": 10,
+      "payload_sha256": "517b6e28ae91a64d67226e304aae6f55e879e57d6f801eac70f2f24d947c8a39"
+    },
+    {
+      "layer": 18,
+      "lane": 11,
+      "payload_sha256": "78c73aa22370ab42e88384bc019b6c8970cf0ef69db3b61a76775be5817055fe"
+    }
+  ],
+  "scope": "All saved payloads and parent chains; equality of retained time-atom definitions.",
+  "limitations": [
+    "Discarded intermediate expressions are not available.",
+    "Atom equality and successful checks alone do not prove physical soundness."
+  ]
+}

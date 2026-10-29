@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "scope": "Independent verification of fixed future-wave brackets and strict guard inequalities; no training-entry qualification",
+  "arithmetic": "Decimal-directed 70-digit operations; degree-90 unscaled exponential series; 250-term atanh logarithms; explicit tails; no exp/ln library calls",
+  "certificate_sha256": "0a4d28081dba894beb368fd6a679ec34ed75f007ae11c1681f54c8d53250e762",
+  "terminal_input_sha256": "b6b2642f985b7bc9d5c88a84c05617dec4dcba282bda32e21569e6d5fdd5118f",
+  "active_cells": 191,
+  "masked_ports": 15,
+  "influential_ports": 525,
+  "global_quiescent_upper": "12.79068217517057208755583998271323244219359050873225211436006846061790",
+  "global_quiescent_coarse_strict_bound": "12.791",
+  "idle_margin_coarse_strict_lower": "7.209",
+  "minimum_margins": {
+    "before_first_raw_end": "0.073770496053157330607064068317413330078125",
+    "before_first_error": "0.172671211763944162479352920532941103696108578921078921078921078921077",
+    "influential_errors_end_before_reopening": "0.540593695581335134221928885317180378467724423230825557670557752387652",
+    "all_raw_inputs_end_before_reopening": "0.099900263316728261753662237996928455402080654462056788901788983618886",
+    "ready_before_next_input": "13.03470674781441258670231762818001706952515949126774788563993153938210",
+    "auxiliary_ready_before_next_same_port_input": "18.74874836400085796440207586811111496017501876876876876876876876876876",
+    "masked_arrival_after_firing": "0.048946993505978753091767430305480957031250"
+  },
+  "work_upper": "240.7808293823993279775455922540064888841209227421386995819676884528403"
+}

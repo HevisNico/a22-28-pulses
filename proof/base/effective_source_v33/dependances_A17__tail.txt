@@ -1,0 +1,12 @@
+def tail(term,anchor,t,derivative):
+    origin=term['origin'];g=term['g']
+    initial_age=anchor.minus(origin).intersect(I(0,1))
+    duration=1-initial_age;elapsed=t.minus(anchor).nonnegative()
+    admitted=amin(elapsed,duration)
+    after=amax(I(0),elapsed-duration)
+    response=g*(-A*initial_age).exp()*h(admitted)*(-K*after).exp()
+    if not derivative:return response
+    current=g*A*(-A*t.minus(origin).nonnegative()).exp()
+    if elapsed.lo>=duration.hi:current=I(0)
+    elif elapsed.hi>duration.lo:current=I(0,current.hi)
+    return -K*response+current

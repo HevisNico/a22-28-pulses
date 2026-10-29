@@ -1,0 +1,138 @@
+EXTENDING THE v3.3 LEARNING-COVERAGE ARGUMENT TO PROGRAM v3.3 + C7
+====================================================================
+
+Formal version: proof/lean/PeakBounds.lean (Lean 4, Mathlib, no sorry)
+proves the mathematical content of C7, C6 and remark P below.
+
+Program: v3.3 + C7 (A22_fresh_launch_v3_3_C7.zip in this folder). It differs
+from the v3.3 program only by the changes in ENGINE_CHANGES_FROM_V33.diff
+and the module affine/cluster_memory_cover.py:
+
+  (a) flowing(), exterior-cluster check: lemma C7, then C6 as second resort;
+  (b) advance(), READY fire candidate: lemma C7;
+  (c) root brackets and Newton steps: slope established on a partition
+      (remark P below; no new lemma).
+
+The learning-coverage theorem
+(proof/learning_justification/output/LEARNING_COVERAGE_THEOREM_EN.txt,
+"the theorem" below) shows that every successful program step preserves the
+relational invariant I1-I5. Each change below replaces a refusal by a
+success. It suffices to show that, when it succeeds, the state it produces
+is the one the theorem's step would produce, or encloses it. The rest of the
+theorem then applies unchanged.
+
+Notation: A = ln 4, K = 1/2, R = 1/10. In READY with no new input on
+[t, t+H], with charge q0 and current amplitude J >= 0,
+
+  Q(u) = R + (q0 - R) exp(-K u) + J (exp(-K u) - exp(-A u))/(A - K),
+
+the scalar READY expression of section 5.1 of the theorem. The program's
+v.ready(q, J, u) is an interval extension of Q.
+
+
+LEMMA C7. Peak bound without the peak-time logarithm
+----------------------------------------------------
+
+Setting. READY state s at time t, horizon H = (T - t).hi for an end date T,
+and the program cannot certify that the argument A*bb/(K*aa) of the
+peak-time logarithm is positive (aa = q0 - R + bb, bb = J/(A-K)). The kernel
+function ready_general_A22.peak_upper(s, T) (unchanged since v3.3) returns:
+max(q0.hi, R.hi) if J.hi <= 0; else, with q = q0.hi and j = J.hi,
+v.ready(q, j, [0, H]).hi if aa.lo <= 0, and otherwise the maximum of q,
+v.ready(q, j, H).hi and v.ready(q, j, [peak]).hi.
+
+Claim. For every admissible device and every u in [0, H], Q(u) <= peak_upper(s, T).
+
+Proof.
+1. Monotonicity. For u >= 0, dQ/dq0 = exp(-K u) > 0 and
+   dQ/dJ = (exp(-K u) - exp(-A u))/(A - K) >= 0, since A > K. Hence
+   Q(u; q0, J) <= Q(u; q0.hi, J.hi) for every admissible (q0, J).
+2. If J.hi <= 0, then J = 0 and Q moves monotonically from q0 toward R, so
+   Q(u) <= max(q0, R).
+3. If aa.lo <= 0, v.ready(q, j, [0, H]) is an interval extension of
+   Q(.; q, j) over the whole interval [0, H], so its upper end bounds Q there.
+4. Otherwise Q(.; q, j) is smooth on [0, H] with at most one stationary
+   point. Its maximum on [0, H] is at 0 (value q), at H, or at that
+   stationary point, all of which are bounded.
+5. The current amplitude J is an upper model while raw pulses end inside
+   the window: after a raw end the true current is 0 <= J exp(-A u). Raw ends
+   are external events, so they are not inside the window anyway; either way
+   step 1 applies. ∎
+
+Use in advance(). In READY the only internal guard is the fire (aux
+transitions, raw ends and arrivals are external events of the queue). If
+peak_upper(s, boundary) < 1, no fire occurs before the boundary for any
+admissible device. The step "flow to the boundary, kind external" is then
+exactly the theorem's external step: the same flowing() call the v3.3
+program makes when its own peak test proves no fire. Otherwise the program
+raises the original refusal.
+
+Use in flowing() inside an exterior cluster. The v3.3 check asserts that
+the READY charge stays below 1 on the whole window (no internal crossing).
+The new check obtains that bound from peak_upper, or from C6 if that fails.
+The state then produced is the one v3.3 computes after its own check
+passes: the check only gates, it does not change the state.
+
+
+LEMMA C6. Piecewise no-fire cover of the pulse memory
+------------------------------------------------------
+
+Setting. READY with a pulse memory (section 5.2 of the theorem), window
+[t, T], H = (T - t).hi. affine/cluster_memory_cover.certify splits [0, H]
+into intervals P_k by bisection, at most 8 levels deep, and evaluates the
+memory charge with dep.evaluate(memory, t + P_k).
+
+Claim. If every evaluation has upper bound < 1, the charge is < 1 at every
+time of [t, T] for every admissible device.
+
+Proof. The P_k cover [0, H]: bisection keeps both halves. dep.evaluate with
+an interval time argument encloses the charge at every time of that
+interval. The v3.3 program already relies on this property in advance(),
+through memory_max = dep.evaluate(memory, probe(I(0, H))). No input is
+admitted inside the window, since an arrival is an external event, so the
+memory is the full description of the charge there. ∎
+
+
+REMARK P. Slope on a partition (no new lemma)
+---------------------------------------------
+
+Section 6 of the theorem uses, for an accepted bracket [l, h]: f(l).hi <= 0,
+f(h).lo >= 0 and "a strictly positive derivative bound" S on [l, h]. For
+each Newton step it needs a mean slope s with r = m - f(m)/s, s in S, and
+S evaluated before f(I(m)).
+
+_piecewise_slope returns S = [min_k S_k.lo, max_k S_k.hi], where the S_k
+are the derivative enclosures on the pieces of a partition of [l, h].
+Every derivative value on [l, h] lies in some S_k, hence in S. The mean
+slope s is an average of such values (integral average across raw cuts,
+as in section 6), so it lies in the convex set S. S is computed before
+f(I(m)) in each Newton step, as in v3.3. S is a plain interval; section 6
+only requires that s be enclosed. The acceptance predicate is the same
+three inequalities. So section 6 applies word for word.
+
+The strictness argument of section 6 (formalized in proof/lean/StrictRoot.lean)
+distinguishes two cases.
+
+If the positive midpoint m is itself a root, f(m)=0, strictness comes from
+the newly evaluated guard enclosure around zero, with the positive mean
+slope held fixed (newton_step_strict). Varying the slope alone cannot widen
+m - 0/s. The fresh guard freedom is supplied by the open-image argument of
+sections 5-6 of the theorem.
+
+If the rounded midpoint is zero, the live READY invariant gives f(0)<0.
+Here newton_step_strict_slope uses a slope enclosure open about the true
+positive mean slope s. Each piece enclosure S_k contains its derivative
+values strictly (the open-image lemma applied to the derivative evaluation),
+so each value lies strictly between min S_k.lo and max S_k.hi, and so does
+their average s. The hull S is therefore open about s, as required.
+SLOW may instead use its open logarithmic guard as described in section 6.
+This is the rounded-midpoint-zero case, not the midpoint-is-a-root case.
+
+
+SUMMARY OF WHAT THE EXTENSION ADDS
+----------------------------------
+
+Two lemmas (C7, C6) and one remark (P), all about steps where v3.3 would
+refuse. No event order, branch, join, ledger or deposit rule changes. The
+execution assumptions A1-A4 apply to the v3.3 + C7 program and its build,
+as recorded in campaign/campaign.json (kernel_id d8fedb8d...).

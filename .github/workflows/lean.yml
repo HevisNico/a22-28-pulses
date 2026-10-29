@@ -1,0 +1,47 @@
+name: Lean (strict-root core)
+
+on:
+  # Every pull request, since the build is a required check on main.
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: proof/lean
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elan
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Resolve Mathlib v4.35.0 and its dependencies
+        # Mathlib is pinned by tag in lakefile.toml; its dependencies follow
+        # Mathlib's own lake-manifest.json at that tag.
+        run: |
+          lake update
+          cat lake-manifest.json
+      - name: Fetch the prebuilt Mathlib cache
+        run: lake exe cache get
+      - name: Build
+        # On failure, the Lean errors are also posted as one annotation, so they
+        # can be read through the API without the full log.
+        run: |
+          set -o pipefail
+          if ! lake build 2>&1 | tee build.log; then
+            msg=$(grep -E -A6 "error" build.log | head -80 | sed -e 's/%/%25/g' | sed -e ':a;N;$!ba;s/\n/%0A/g')
+            echo "::error title=lake build::$msg"
+            exit 1
+          fi
+      - name: Check the axioms (no sorryAx)
+        run: |
+          for f in StrictRoot PeakBounds CommutationE FirstCrossing FutureWave; do
+            lake env lean "$f.lean" > "axioms_$f.log" 2>&1
+            echo "== $f"; cat "axioms_$f.log"
+            test "$(grep -c "depends on axioms" "axioms_$f.log")" -eq 6
+            if grep -q sorryAx "axioms_$f.log"; then exit 1; fi
+          done

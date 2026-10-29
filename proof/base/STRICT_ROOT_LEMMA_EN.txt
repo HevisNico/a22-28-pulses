@@ -1,0 +1,141 @@
+A22 v3.3 — A ROUTE TO THE STRICT-ROOT LEMMA
+========================================
+
+Scope: proved abstract propagation rules and a conditional root-order
+theorem. The complete source-specific instantiation is still a proof
+obligation. This note is not a certification of the ordinary event handler.
+
+1. A stronger property than positive interval width
+
+For an affine form X with center [c-,c+], coefficients a and remainder e,
+fix the already chosen noise coordinates eta. Call x strictly represented
+in the center when there exist c and rho such that
+
+  x = c + sum a_k eta_k + rho,
+  c- < c < c+,   |rho| <= e.
+
+This property implies strict containment in the marginal interval, but
+not conversely. It allows the same fixed old noise assignment in several
+quantities. New error symbols can be chosen when a remainder is promoted.
+
+Under the enclosure contracts of the arithmetic, the following rules hold.
+
+(a) Addition and negation preserve strict-center representation when at
+    least one summand is strict. Outward center rounding cannot erase an
+    existing interior witness. Zero shortcuts return the strict operand.
+(b) For multiplication, suppose one operand has an interior center witness
+    c and the other has a nonzero center witness d. The product c*d is
+    interior to the rectangular center product. The remaining linear,
+    nonlinear and coefficient-rounding terms are covered by the usual
+    error bound. Thus the product is strict in its center. This argument
+    requires a NONZERO CENTER WITNESS; positivity of the represented
+    physical product alone is not sufficient for this particular rule.
+(c) In a mean-value unary evaluation, if the exact f(x0) is strictly inside
+    the stored center [flo,fhi], represent it by that interior value.
+    The slope and input-deviation terms go into the bounded remainder and
+    retained coefficients. Correctly rounded exp/log expanded by adjacent
+    Decimal numbers supply such a strict enclosure, except exact-return
+    shortcut cases, which must be considered separately.
+(d) Truncation transfers discarded coefficients to a bounded remainder.
+    Promotion replaces a bounded remainder by a fresh noise coordinate.
+    Neither changes an interior center witness. Freshness is essential.
+(e) A common-generator hull preserves strict-center representation of each
+    strict constituent. For branch i, move its coefficient differences
+    and remainder into the new center. Their magnitude is <= the radius
+    subtracted from/added to that branch's center endpoints. Its original
+    strict center leaves strict room at both new endpoints, even if the
+    error bound is attained. Taking the center union cannot reduce room.
+(f) Replacing a strict form by its plain marginal interval preserves
+    strict containment. Intersecting two intervals in which the same
+    exact x is strictly interior preserves strict containment of x.
+    Intersecting with an arbitrary sound CLOSED interval need not do so.
+
+2. Conditional root refinement theorem
+
+Let each physical realization have a continuous guard f, a first root r,
+and a positive derivative on every bracket used by the accepted solver.
+Assume its evaluated endpoint/root-probe guards satisfy the strict
+properties needed below, under a common physical/noise witness.
+
+If f(l) has an enclosure with upper bound <=0 and its true value cannot
+equal zero at that accepted endpoint, then f(l)<0. Similarly the accepted
+right endpoint has f(h)>0. Thus l<r<h. An initial endpoint at elapsed zero
+may instead be handled directly by the live-state invariant q<1 or ell>0.
+
+At m, the mean-value identity is r=m-f(m)/f'(xi), with xi between m and r.
+If f(m) is strictly represented and the reciprocal derivative has a
+positive center witness, rule (b), then (a), gives a strict representation
+of r in the Newton image. Its plain interval and the previous strict
+bracket both contain r in their interiors; rule (f) preserves that fact.
+Induction over finitely many contractions proves noncollapse of the
+accepted bracket and strict containment in every accepted plain image.
+
+If affine_refine chooses the correlated Newton form, the same mean-value
+argument supplies its strict-center witness. If it keeps a plain bracket,
+the preceding argument supplies strict containment. Choosing a wider
+correlated form is not itself unsound: the mean-value identity, rather
+than containment in the previous bracket, proves that form contains r.
+
+The scalar ready_root route additionally uses monotonicity of READY
+charge in q0 and J. Its extremal comparison roots bound the actual root.
+Strict outward endpoints for those comparison roots make the combined
+plain enclosure strict even when the physical realization attains an
+extremal q0 or J value. This comparison still needs existence of the
+appropriate ascending roots, which the accepted calls must establish.
+
+3. Conditional event-order consequence
+
+Suppose the returned duration is nonpoint and has the strict property
+above. temporal.shift allocates a new duration atom. The exterior queue
+predates this allocation, so it contains no occurrence of that atom.
+
+If both the shifted absolute base and the uncancelled expression sum
+retain the strict witness, either subtraction used by Time.minus strictly
+encloses the actual date difference. Cancellation of older shared atoms
+does not cancel the newly allocated root-duration atom. Thus
+
+  lower(exterior - root) >= 0  implies  actual exterior > actual root,
+
+and the reversed comparison implies actual exterior < actual root.
+An actual coincidence cannot pass either ordinary ordering test. It must
+be handled by a covering macro or produce a refusal. This is exactly the
+property required to rule out the toy countermodel in the main draft.
+
+This consequence must not be applied merely because a root interval has
+nonzero width. It uses the stronger pointwise interior representation.
+
+4. Source instantiation checklist still to close
+
+SLOW has a useful explicit source of slack: ell=ln(2.5)-capped_dose.
+The expanded logarithm center is strict. Addition/subtraction and the
+history hull preserve its strict witness under rules (a)/(e). This also
+suggests why per-order return roots should never take the point-duration
+shortcut and therefore should receive distinct time atoms before a join.
+
+READY is more involved. For scalar flow, the positive current term is
+J*(exp(-K*u)-exp(-A*u))/(A-K). For pulse memory, it is a positive admitted
+pulse or tail response. A true crossing from below threshold requires
+some nonzero admitted contribution. For positive probe duration, the
+expanded exponentials provide candidate strict centers. To finish the
+implementation proof one must establish all of the following on EVERY
+relevant effective branch:
+
+  * the contributing term retains strictness after the actual choice of
+    h/pulse/tail branch, lattice min/max and any physical-domain clipping;
+  * the multiplier and reciprocal-slope center witnesses needed by rule
+    (b) are nonzero with the same selected physical/noise assignment;
+  * no intersection used along the root construction retains only a
+    closed endpoint witness; all zero-age and exact shortcut cases are
+    discharged separately;
+  * the root witness can be extended consistently through separately
+    constructed absolute bases and time expressions, including error
+    promotion, and both candidate subtraction forms remain strict;
+  * the local-cycle restricted absolute anchors are used only after
+    their distinct return atoms have been established, or else a common
+    enclosing anchor is proved for every branch kept by dep.join.
+
+The propagation rules explain a concrete route to a source-level proof
+without a new campaign. They do not by themselves certify this checklist.
+In particular, "outward arithmetic is sound" is a weaker statement than
+the strictness theorem required here. The dossier keeps H_entry open until
+this instantiation and the remaining macro premises are validated.

@@ -1,0 +1,99 @@
+{
+  "scope": "Recorded fire_arrival_commutation entries of one campaign directory; no engine execution",
+  "campaign": {
+    "environment": {
+      "arithmetic_backend": "native",
+      "native_sha256": "87a53495f570436f8fe41e58dcb6a05f0078fbb034bd01adc3f48162b6e40d02",
+      "numpy": "2.3.5",
+      "python": "3.13.17",
+      "scipy": "1.17.0"
+    },
+    "kernel_id": "b49dca10167d09511d6933d3ca1dbc50ebce16664cb872395f707ab689fa89ae",
+    "parameters": {
+      "epsilon_relative": "0.001",
+      "initial_delta": "1e-5",
+      "training_calendar": {
+        "count": 28,
+        "first": "0",
+        "gap": "8",
+        "last": "216",
+        "source_lane": 0,
+        "terminal_time": "230"
+      }
+    },
+    "run_id": "25e6fa5fa78d4ed7afa804f780a0d92c",
+    "schema": "A22-affine-research-campaign-1",
+    "scientific_status": "experimental_not_qualified"
+  },
+  "count": 6,
+  "event_patterns": [
+    {
+      "events": [
+        [
+          "raw_off"
+        ]
+      ],
+      "count": 2
+    },
+    {
+      "events": [
+        [
+          "raw_on"
+        ],
+        [
+          "mark_on"
+        ],
+        [
+          "mark_off"
+        ]
+      ],
+      "count": 2
+    },
+    {
+      "events": [
+        [
+          "error_on"
+        ]
+      ],
+      "count": 2
+    }
+  ],
+  "branches": {
+    "2": 4,
+    "4": 2
+  },
+  "cells": {
+    "18,4": 2,
+    "18,5": 1,
+    "18,7": 1,
+    "18,8": 2
+  },
+  "first": {
+    "cell": "18,4:aff",
+    "batch": 9,
+    "guard": "fire_arrival_commutation",
+    "arrivals": 1,
+    "branches": 2,
+    "kappa": "1",
+    "widening": "0",
+    "fire": [
+      "175.8630830363786925282643118423476917335463456032198043639402119470358222379626717564945341881091888733359457367406156597356011736711356284623376916792792872730",
+      "175.8678358083615580802558335829951665168378312314896163073464823886377479013357552865845126527672291573734526375250790451896459450517502978143724127076142991495"
+    ],
+    "join_time": [
+      "175.8704420352918661128642886556266088252949763218971032414450509413573725095845905495831983400025110329303215018454059797173654630875155503806780373539909640731",
+      "175.8704420352918661128642886556266088252949763218971032414450509413573725095845905495831983400025110329303215018454059797173654630875155503806780373539909640731"
+    ],
+    "events": [
+      [
+        "raw_off"
+      ]
+    ],
+    "predicate": "min(a_min,f0) <= F <= f0 and F >= f0-kappa*(f0-a_min)^+ ; Q unchanged by raw_off/auxiliary actions; post-fire states of every order joined",
+    "layer": 18,
+    "lane": 4
+  },
+  "all_events_are_one_mark_off": false,
+  "all_widenings_zero": false,
+  "all_branch_counts_two": false
+}

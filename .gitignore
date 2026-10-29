@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+# native extensions are built on the target machine (the as-run binaries are a release asset)
+*.so
+*.o
+engine/build/
+engine/test_diagnostics/
+engine/results/
+# full campaign outputs are a release asset
+campaign28_T230_eps1e-3/
+proof/lean/.lake/
+proof/lean/lake-manifest.json

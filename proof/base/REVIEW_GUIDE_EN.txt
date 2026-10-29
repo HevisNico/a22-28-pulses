@@ -1,0 +1,98 @@
+A22 v3.3 — REVIEW GUIDE FOR THE MANUAL LEARNING PROOF
+===================================================
+
+What is new
+-----------
+
+The current learning theorem supplies the missing universal quantifier over
+the stated initial states and fixed physical device parameters. It does not
+derive that quantifier from the count of passing cells. Its argument is a
+local simulation/coverage invariant, composed through the feedforward graph.
+The numerical terminal section and future return theorem are existing inputs.
+
+The proof's most consequential points for independent review are:
+
+1. Pointwise affine soundness and the OPEN IMAGE LEMMA (Sections 4-5).
+   Freeze old physical/noise coordinates. A newly evaluated exponential or
+   logarithm must leave two-sided latitude around the actual guard value.
+   Subsequent arithmetic must preserve that latitude for the selected
+   nonzero physical coefficient, even after a hull changes the center.
+   The argument is over the projection onto fresh coordinates, not a claim
+   of strict center slack at every fixed assignment of those coordinates.
+
+2. Newton ordering and atom freshness (Section 6).
+   The derivative is evaluated before the new guard evaluation. Check
+   that the selected fresh latitude can vary while the chosen mean slope
+   and all old exterior dates stay fixed. Include piecewise derivatives
+   across raw cuts and the possible zero rounded-midpoint case. Check
+   every retained affine_refine output, not only the final plain bracket.
+   This is used to strengthen a weak bound comparison into strict physical
+   order for ordinary uncertain roots. Fixed FAST/SLOW dates are separate.
+
+3. Reachable memory joins (Section 9).
+   The proof does not assert that equal tokens suffice for arbitrary
+   restricted memory anchors. Ordinary/recovery joins use common objects;
+   separately recomputed local returns have fresh distinct nonpoint atoms,
+   so their memory is dropped. Verify the callers and retained discrete
+   fields together with the actual dep.join implementation.
+
+4. All successful event and macro exits (Section 8).
+   Check actual-order retention, phase intersections, absence of a hidden
+   READY firing at an endpoint, and refusal when optional emission branches
+   cannot be represented by the single-train interface. The commutation
+   argument specializes to the complete recorded list of 202 uses.
+   Review both ordinary root construction and _first_crossing_cover:
+   Section 8(vi) now proves the latter by left-to-right slice coverage,
+   continuity and endpoint signs, without a derivative assumption. The
+   saved records do not identify which construction served those uses.
+   There is no claim that a zero count for the new recovery-group diagnostic
+   excludes uses of the older single-event local-cycle fallback.
+
+5. Artificial group clocks (companion GROUP_ENTRY_CLOCK_LEMMA_EN.txt).
+   Check that the inclusive FAST-section overlap test runs before ordinary
+   advance, and that the protected macro checks its entry ordering. Those
+   facts close the case where a single-event group is later extended in
+   SLOW. Duration clipping alone would not close this obligation.
+
+6. Global witnesses and theorem scope (Sections 10-11).
+   Shared parents must retain the same physical date at all destinations.
+   Fresh local abstractions must extend that assignment without resetting
+   it. Distinguish fixed influential gains at future entry from masked
+   gains permitted to evolve, and distinguish the quiescent section Q
+   from its between-section trajectory tube.
+
+Evidence versus assumptions
+---------------------------
+
+The supplied source witness checker verifies 110 structural/hash facts
+with 40 function records. The previous audits authenticate 216 payloads,
+lineage and receipts and 63,888 distinct retained time atoms with no
+conflicting definition. Two earlier independent arithmetic checkers support
+the future inequalities. None of these is a proof-assistant verification
+of the new local simulation argument, a complete transition trace, or an
+independent qualification of the native binary.
+
+Assumptions A1-A4 explicitly retain authentic execution, the arithmetic and
+language contracts, fail-closed assertions/exceptions, and namespace/context
+discipline. The source review checks the corresponding runner mechanisms.
+It does not replace the need to trust the runtime/toolchain at this level
+of a computation-assisted mathematical proof.
+
+Corrections to earlier descriptions
+-----------------------------------
+
+* Effective D1_PORTS are distinct per-port affine symbols enclosing the
+  first-delay interval; they are not plain occurrences. Later D0 keeps
+  the fixed port parameter dependence.
+* Effective U0 is the point upper(2*delta/(LE*RM)), not the logarithmic
+  exact terminal-ERROR duration. The latter is bounded by this slab.
+* The full relative_order_proofs list is exported; truncation applies to
+  the twelve largest-width diagnostics instead.
+* The runner rejects optimized Python with an explicit if not __debug__
+  exception, rather than relying on an assert that -O would remove.
+
+No new campaign, cell replay or modification of the supplied program was
+performed. The archived experimental_not_qualified status is preserved.
+This dossier's conclusion is the supplied manual proof under its stated
+assumptions. Independent expert acceptance and formal verification are
+not represented as already obtained.

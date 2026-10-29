@@ -1,0 +1,129 @@
+ADDENDUM TO THE LEARNING-COVERAGE THEOREM: GENERAL RELATIVE WIDTH EPS
+=====================================================================
+
+proof/learning_justification/output/LEARNING_COVERAGE_THEOREM_EN.txt ("the
+theorem") is kept byte-identical (its hash is cited). It is written for the
+relative parameter half-width 1e-4. This addendum lists every step that uses
+that value, and records what replaces it at eps = 1e-3 for program v3.3 + C7.
+No other step uses the value of eps.
+
+1. Section 1, the family Theta: "in their prescribed relative 1e-4
+   intervals" becomes "in their prescribed relative eps intervals". The
+   initial perturbations stay 1e-5.
+
+2. Sections 5.4 and 7, initial section and auxiliary cycles. These rest on
+   the finite inequalities of proof/final_entry_audit/certify_initial_section.py,
+   which fixes the parameter factor to [.9999, 1.0001].
+   certify_initial_section_eps.py (this folder) is the same script with the
+   factor [1 - eps, 1 + eps]; at eps = 1e-4 its output is byte-identical to
+   proof/final_entry_audit/output/initial_section_certificate.json.
+   At eps = 1e-3 all fifteen inequalities hold
+   (terminal/initial_section_eps1e-3.json):
+
+                                         eps = 1e-4           eps = 1e-3
+     initial section end U0              8.6570e-5            8.6648e-5
+     first auxiliary delay D1            [0.019997, 0.020092] [0.019979, 0.020110]
+     work bound W (Section 7)            < 240.566579         < 240.780830
+     every auxiliary cycle ends before   1.3                  1.3
+
+   The bound W < 500 used in Section 7 therefore holds with the new value.
+
+3. Section 8(vi), the recorded commutations. The section proves the
+   commutation macro (affine/commutation.py, unchanged since v3.3) only for
+   groups made of a single mark_off, with two orders and zero fire-time
+   widening, and says that a general claim for raw arrivals "is not needed
+   for this campaign theorem". At eps = 1e-4 all 202 recorded commutations are
+   of that kind (proof/evidence/commutation_usage.json). At eps = 1e-3 they are
+   not. audit_commutations.py, run on the campaign outputs, gives
+   (terminal/commutation_usage_eps1e-3.json):
+
+     group                              count   orders   widening
+     raw_on, mark_on, mark_off          202     4        > 0 (kappa ~ 0.917)
+     raw_off                              2     2        0
+     error_on                             2     2        0
+
+   all in layer 18, lanes 4, 5, 7 and 8. Lemma E below proves the macro in
+   general, and covers these 206. Neither the no-fire cover nor the
+   recovery-group fallback is used at either eps.
+
+   LEMMA E. Fire against a group of exterior events, in READY
+   ----------------------------------------------------------
+   The argument is the one written in the docstring of affine/commutation.py,
+   checked here against _resolve and _fire_root. Formal version of E1, E2 and
+   the enclosure: proof/lean/CommutationE.lean (Lean 4, Mathlib, no sorry);
+   there h(u) <= A u is proved for every u >= 0, without the concavity
+   condition below.
+
+   Setting. A live READY state s at time t0 with pulse memory; a group of
+   exterior events whose order relative to the READY fire is not decided.
+   Each event is raw_on (an input arrival), raw_off, or an auxiliary action
+   (mark_on, mark_off, error_on, error_off); any other action makes the macro
+   decline, and the caller then raises the original refusal. Q0(t) is the
+   charge given by the memory without the group's arrivals, and f0 its first
+   crossing of 1. All statements are for one fixed physical realization.
+
+   E0 (events that do not move the charge). In READY, a raw_off at origin+1
+   leaves Q unchanged, because the memory term of that input already stops
+   its admission at origin+1 (the macro checks that the term is in memory and
+   that the date is exactly origin+1). An auxiliary action changes only flags,
+   b and z histories; Q does not depend on them, since pulse amplitudes are
+   fixed at admission, and b and z act on q only through later admissions and
+   protection. Hence, before the fire, Q = Q0 + sum over the arrivals j already
+   admitted of g_j h(t - a_j).
+
+   E1 (fire bracket). Each added term is >= 0, so Q >= Q0 on [t0, F], where F
+   is the actual first threshold time. Q0(f0) = 1 gives F <= f0. On
+   [t0, min(a_min, f0)) there is no arrival yet, so Q = Q0 < 1 there, and
+   F >= min(a_min, f0).
+
+   E2 (tightening). h is concave on [0, 2 ln(A/K)/(A-K)], which contains [0, 1]
+   (the macro asserts 2 ln(A/K)/(A-K) > 1; it is about 2.30), and h(0) = 0,
+   h'(0) = A, so h(u) <= A u on [0, 1]. The macro requires
+   w >= (f0 - a_min)^+ for every realization and w < 1, so every admitted
+   arrival has age < 1 before f0. Let sigma be a lower bound of Q0' on
+   [a_min, f0], valid for every realization (the macro takes the derivative
+   enclosure on [max(0, min a.lo), r0.hi], which contains that window), and
+   G >= sum_j g_j over the arrivals (the macro takes the largest sum of upper
+   gains over all orders). For t in [a_min, f0], by the mean-value theorem,
+
+     Q(t) <= 1 - sigma (f0 - t) + G A (t - a_min),
+
+   which is < 1 for t < (sigma f0 + G A a_min)/(sigma + G A). If sigma > 0,
+   F >= f0 - kappa (f0 - a_min)^+ with kappa = G A/(sigma + G A) in (0, 1];
+   otherwise kappa = 1 and E1 gives the same bound. So the emitted date
+   t0 + r0 + [-kappa w, 0], with r0 an enclosure of f0 - t0 from the ordinary
+   root path (or the first-crossing cover of Section 8(vi)), contains F.
+
+   E3 (every order is kept). _fire_root certifies Q0(t0 + hi) >= 1 with hi
+   below the horizon, so the fire occurs in the window, before the next
+   pending event; the macro widens the window when the fire enclosure can
+   reach the next event, and declines at the end of the fast section. For
+   every admissible order of the group (Section 8, no equality pruned) and
+   every position k of the fire in it, the macro runs the unchanged kernel
+   maps: the k events before the fire, the fire reset at the common enclosure
+   above, the remaining events under protection, and the flow to a common
+   clock U after all of them. The actual realization follows one of these
+   (order, k) branches exactly, with its own b and z histories, and an
+   arrival after the fire is not admitted, as in the model. The branches are
+   joined by join_states after the macro asserts that they agree on mode,
+   auxiliary phases, fire object and raw flags; memory is None after the
+   fire reset, so Section 9 applies as for the mark_off case.
+
+   Hence every successful commutation, of any recorded kind, covers the actual
+   realization. The 206 commutations at eps = 1e-3 are instances: 202 with an
+   arrival (E1 to E3 with kappa < 1), and 4 with no arrival (w = 0, no
+   widening, E0, E1 and E3).
+
+4. Additions of program v3.3 + C7: lemmas C7, C6 and remark P
+   (LEMMAS_C7_C6_EN.txt), proved for every eps.
+
+5. Section 10 ends in the domain Q, whose definition and future theorem are
+   adapted to eps by FUTURE_INVARIANCE_GENERAL_EPS_EN.txt.
+
+Clarification of Section 5.1. The sentence on the exp(0) = 1 shortcut means:
+the program returns exp = 1 exactly only when its argument is the exact point
+0 (affine_iv.I.exp, plain branch), that is at elapsed time zero, where the
+live-state fact q0 < 1 excludes a root. An argument that is symbolic, even with
+center 0, goes through the mean-value form, whose center is expanded to
+adjacent numbers and is therefore strict. At a positive actual elapsed time the
+argument is never the exact point 0, so the open-image argument applies.

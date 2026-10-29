@@ -1,0 +1,1 @@
+def clip(x):return amin(BMAX,x)

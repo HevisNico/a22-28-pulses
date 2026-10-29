@@ -1,0 +1,4 @@
+def gain(age):
+    age=amax(I(0),age)
+    x=EB*(1-(-LAM*age).exp())
+    return amin(STEP,amax(I(0),x))

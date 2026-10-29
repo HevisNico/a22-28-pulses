@@ -1,0 +1,7 @@
+def coefficients(s):
+    t=s['t'];g=[C if s['caps'][j] else s['z'][j].exp() for j in range(3)]
+    J=sum((g[j]*A*(-A*t.minus(x)).exp() for j,x in enumerate(s['raw']) if x is not None),I(0))
+    cg=[8*I('.1')*(-LE_PORTS[j]*t.minus(s['err'][j])).exp() if s['p']==0 and s['aux'][j]==3 and not s['caps'][j] else I(0) for j in range(3)]
+    cb=[I('.5')*(-LM_PORTS[j]*t.minus(s['mark'][j])).exp() if s['p']!=0 and s['aux'][j]==1 and not s['bstop'] else I(0) for j in range(3)]
+    assert all(s['raw'][j] is None or cg[j].hi==0 for j in range(3))
+    return J,cg,cb
