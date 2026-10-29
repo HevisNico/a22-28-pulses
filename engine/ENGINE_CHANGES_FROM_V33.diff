@@ -1,0 +1,91 @@
+--- a/affine/engine.py (v3.3, sweep/SOURCE_FOR_REPLAY.zip)
++++ b/affine/engine.py (v3.3 + C7)
+@@ -22,6 +22,26 @@
+ v = b.v; dep = b.dep
+ import cycle_local_A20, ready_general_A22
+ ready_general_A22.install()
++# v3.3+C7, lemma C7 (with C6 as second resort): when the READY peak-time
++# logarithm has no certified positive argument, bound the charge with the
++# kernel's peak_upper, else with the piecewise pulse-memory cover.
++_flow = textwrap.dedent(inspect.getsource(b.flowing))
++_peak_old = ("            bb=J/(A-K);aa=q-R+bb;pk=(A*bb/(K*aa)).ln()/(A-K)\n"
++             "            x=I(min(H,max(D(0),pk.lo)),min(H,max(D(0),pk.hi)))\n"
++             "            assert v.ready(q,J,x).hi<1,'internal crossing inside uncertain external cluster'\n")
++_peak_new = ("            bb=J/(A-K);aa=q-R+bb\n"
++             "            ratio=A*bb/(K*aa) if aa.lo>0 else I(0)\n"
++             "            if ratio.lo>0:\n"
++             "                pk=ratio.ln()/(A-K)\n"
++             "                x=I(min(H,max(D(0),pk.lo)),min(H,max(D(0),pk.hi)))\n"
++             "                peak=v.ready(q,J,x).hi\n"
++             "            else:peak=READY_CLUSTER_PEAK(s,tt)\n"
++             "            assert peak<1 or READY_MEMORY_COVER(s,tt),'internal crossing inside uncertain external cluster'\n")
++assert _flow.count(_peak_old) == 1, 'unexpected flowing() source'
++b.READY_CLUSTER_PEAK = ready_general_A22.peak_upper
++import cluster_memory_cover
++b.READY_MEMORY_COVER = lambda s, tt: cluster_memory_cover.certify(b, s, tt)
++exec(compile(_flow.replace(_peak_old, _peak_new), b.__file__, 'exec'), b.__dict__)
+ import avance_causale_A22 as causal
+ assert b.I is I and dep.I is I and v.I is I, 'affine class not installed everywhere'
+ 
+@@ -30,6 +50,26 @@
+ _ROOT_HINTS = {}
+ ROOT_STATS = Counter()
+ 
++def _piecewise_slope(deriv, l, h, pieces=(1, 8, 32)):
++    """Enclosure of the derivative over [l, h]: the hull of its enclosures on
++    a partition of [l, h]. Tried whole first, then on 8 and 32 equal pieces;
++    a positive lower bound on every piece is a positive lower bound on the
++    union. Same predicate as before, established on a finer partition."""
++    l = D(l); h = D(h)
++    best = deriv(I(l, h))
++    if best.lo > 0 or h <= l:
++        return best
++    for n in pieces[1:]:
++        cuts = [l] + [iv.NEAR.add(l, iv.NEAR.divide(iv.NEAR.multiply(iv.NEAR.subtract(h, l), D(k)), D(n))) for k in range(1, n)] + [h]
++        cuts = sorted(set(c for c in cuts if l <= c <= h))
++        parts = [deriv(I(a, b)) for a, b in zip(cuts, cuts[1:])]
++        low = min(p.lo for p in parts); high = max(p.hi for p in parts)
++        best = I(low, high)
++        if low > 0:
++            ROOT_STATS['piecewise_slopes'] += 1
++            return best
++    return best
++
+ def _plain_root(fun, deriv, lo, hi, guess):
+     """Try a useful bracket first; every acceptance still checks both signs
+     and a strictly positive slope. The original search remains the fallback.
+@@ -43,7 +83,7 @@
+     def check(rad):
+         ROOT_STATS['bracket_trials'] += 1
+         l=max(lo,iv.DOWN.subtract(g,rad)); h=min(hi,iv.UP.add(g,rad))
+-        fl = fun(I(l)); fh = fun(I(h)); slope = deriv(I(l, h))
++        fl = fun(I(l)); fh = fun(I(h)); slope = _piecewise_slope(deriv, l, h)
+         return l,h,fl.hi<=0 and fh.lo>=0 and slope.lo>0,slope.lo>0
+     for _ in range(4):
+         l,h,accepted,increasing=check(rad)
+@@ -65,7 +105,7 @@
+     _ROOT_HINTS[tag]=rad
+     x = I(l, h)
+     for _ in range(18):
+-        m = x.mid(); slope = deriv(x)
++        m = x.mid(); slope = _piecewise_slope(deriv, x.lo, x.hi)
+         assert slope.lo > 0
+         y = x.intersect((I(m) - fun(I(m)) / slope).plain())
+         y = y.plain()
+@@ -233,6 +273,16 @@
+ # x(eps)-tt(eps) >= 0 for every eps proves tt first even when the absolute
+ # date boxes overlap; this is pointwise and therefore sound.
+ _adv = textwrap.dedent(inspect.getsource(b.advance))
++# Lemma C7 in advance(): same fallback before the peak logarithm.
++_advance_peak_old = "            bb=J/(A-K);aa=q-R+bb;pk=(A*bb/(K*aa)).ln()/(A-K)\n"
++_advance_peak_new = ("            bb=J/(A-K);aa=q-R+bb\n"
++                     "            ratio=A*bb/(K*aa) if aa.lo>0 else I(0)\n"
++                     "            if ratio.lo<=0:\n"
++                     "                if READY_CLUSTER_PEAK(s,boundary)<1:return flowing(s,boundary),'external'\n"
++                     "                raise v.Ambiguous('ready guard still overlaps external boundary or possible tangency')\n"
++                     "            pk=ratio.ln()/(A-K)\n")
++assert _adv.count(_advance_peak_old) == 1, 'unexpected advance() peak source'
++_adv = _adv.replace(_advance_peak_old, _advance_peak_new)
+ _old_order = "if not all(tt.box().hi<=x.box().lo for x,_,_ in candidates[1:]):"
+ assert _adv.count(_old_order) == 1
+ _adv = _adv.replace(_old_order, "if not all(x.minus(tt).lo>=0 for x,_,_ in candidates[1:]):")

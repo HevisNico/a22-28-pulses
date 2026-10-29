@@ -1,0 +1,584 @@
+A22 v3.3 — COVERAGE OF EVERY ADMISSIBLE LEARNING TRAJECTORY
+========================================================
+
+Manual source-level proof, under the explicit execution assumptions below.
+This is not a proof-assistant certificate or a qualification of the compiler,
+Python runtime, or native binary. The archived research status is unchanged.
+
+The theorem targets the authenticated existing campaign:
+  run_id: f29efeaf7ff44d09bbce1e149630f39a
+  kernel_id: 65cf7b7776347fa8de24fa5e1c357e98ee0f90c4bb8d65f694610fb26db3b25c
+  post-build program identity: ae1b515af494ef604526dbe8e651c325512b997f6e93f1d3aefb646b96e13256
+  pre-build source identity: 426eefc40a4c77e8649827b06e3d3cb6e40832b3f678f48c146535c24c60d944
+
+The first identity includes the two archived native extensions; the second
+is the original distribution's source_identity_before_target_build. All 87
+original package files are unchanged. The identity function selects 71
+files before compilation and 73 after adding the two .so files. Both
+binaries are now included at their original paths in the dossier's reference
+program tree. BUILD_IDENTITIES_EN.txt and native_extensions_provenance.json
+give the exact binary hashes and a reproducible reconstruction of both
+identities and the campaign kernel_id. This is artifact correspondence,
+not an independent compiler or native-binary correctness proof.
+
+This document supersedes the OPEN local-coverage status in the earlier proof
+drafts, at the level of a manual mathematical/source argument with a trusted
+execution base. It does not claim an unconditional, independently machine-
+checked certification of the historical execution. No campaign or cell replay
+was performed, and no original program file was modified.
+
+1. Statement and scope
+----------------------
+
+Let Theta be the fixed-device parameter family of full_model_reference.md:
+independent per-cell/per-port physical constants in their prescribed relative
+1e-4 intervals, and initial perturbations of size 1e-5. Initial auxiliary states
+are precisely the allowed READY or terminal-ERROR states, with no hidden input
+history. The training source is lane 0 with 128 canonical pulses at 8k,
+0<=k<128. Each cell receives the three specified preceding-layer lanes.
+
+For theta in Theta and an admissible initial state x0, let X_theta,x0(t)
+denote the physical hybrid trajectory, including its emitted pulse history.
+Let S_18 be the joint terminal enclosure assembled from the 216 authenticated
+cell results at T=1116, using the shared time and parameter identities.
+
+THEOREM (learning coverage). Under assumptions A1-A4 below, every admissible
+learning trajectory is covered by the recorded computation. In particular,
+
+  for every theta and admissible x0, X_theta,x0(1116) belongs to S_18,
+
+and every physical training emission is represented in the corresponding
+stored output train with its common identity at all downstream destinations.
+The recorded terminal bounds, intersected with the physical phase/cap facts,
+are included in the previously defined quiescent domain Q. Consequently
+
+  H_entry: Reach_training(1116) subset Q.
+
+The theorem is specific to the stated training protocol and physical family.
+It is not a statement about arbitrary input waveforms or arbitrary initial
+hidden histories. Existence of every abstract branch is not asserted.
+
+2. Execution assumptions and what the artifacts actually attest
+--------------------------------------------------------------
+
+A1. The executed program has the authenticated effective v3.3 semantics:
+the reviewed installation order, functions, parameters, and supplied reference
+model. No unrecorded code replacement or external mutation changes them.
+The passive audits establish byte identity, receipts, parent lineage and
+typed-payload hashes; authentic provenance of the execution itself is assumed
+in the usual sense of a computation-assisted proof.
+
+A2. Python/Decimal implement the stated language and directed-arithmetic
+contracts; exp/log are correctly rounded before adjacent-number expansion.
+The native coefficient routines faithfully implement the reviewed C formulas
+with binary64 round-to-nearest, gradual underflow and no unsafe reassociation
+or contraction. Memory/storage behave correctly. The native binary hash is
+recorded; compiler correctness and binary/source equivalence have not been
+formally verified by this work.
+
+A3. Assertions are active and a failed bound, unsupported branch, resource
+limit or exception cannot be converted into a successful cell result. This
+is enforced in the reviewed runner: initialize() explicitly raises when
+__debug__ is false, using an if statement rather than an assert. Worker
+failures are recorded as not_certified and re-raised. A complete receipt is
+written only after a returned result and exact write/read comparisons.
+
+A4. Producer namespaces are distinct; their counters are not reset inside a
+cell. The port-context wrappers run serially inside a worker process. The
+reviewed runner starts fresh spawned processes and assigns run/cell/layer/lane
+namespaces. Temporary port contexts are restored in finally blocks. Separate
+destinations reload the same authenticated parent emission definitions.
+
+These assumptions are stated rather than hidden inside the word "proved".
+No assumption that the cell evaluator is already sound is included: its
+enclosure and event-coverage obligations are the subject of the proof below.
+The source-witness script checks textual/AST facts and source identity only;
+it is not an automatic verifier of this mathematical argument.
+
+3. Relational invariant at control points
+----------------------------------------
+
+Fix one physical realization. Maintain one assignment of all existing
+physical and abstraction noise coordinates; extend it when fresh abstraction
+coordinates are created. At a unit-loop head, the actual realization has:
+
+I1. A represented control date, with every time atom denoting the same
+quantity at all its occurrences. Both the absolute box and time expression
+contain that date. Labels alone are not identities.
+I2. Enclosed q, z, b and the correct raw/auxiliary modes and active origins.
+Energy lies in [50,100]. READY is strictly below threshold after all due
+fires have been handled. Protected states carry the correct fire identity.
+I3. At least one retained actuation/deposit ledger for the physical gated
+history, with the same parameter, endpoint and noise choices. Products of
+ledger unions may add spurious combinations but retain the actual one.
+I4. If READY memory exists, its anchor, anchor charge, admitted amplitudes
+and raw-tail origins represent the actual READY solution. If it is absent,
+the scalar state still encloses the physical charge.
+I5. The remaining exterior queue contains every unprocessed action; the
+stored output prefix contains the complete physical emission prefix. A
+distinct emission history is not silently identified with another one.
+
+One harmless boundary representation is allowed: FAST at exact age 1 may
+stand for a pending zero-duration FAST-to-SLOW normalization. At that point
+q=.25 physically; both protected modes have the same gates and b ledger.
+The fixed section F+1 remains recoverable from the fire field and cannot
+disappear when a raw flag is cleared. This exception does NOT allow a due
+READY fire to be forgotten. It resolves a boundary case left implicit in
+the earlier Gamma draft.
+
+Only live control states satisfy this invariant. Counterfactual READY
+extensions, continued-protection calculations and conditional-order probes
+are proof devices; they need not be physical states at their probe times.
+
+4. Arithmetic inclusion and a new openness argument
+---------------------------------------------------
+
+An affine form denotes [c-,c+]+sum a_i*eta_i+[-e,e]. At fixed existing eta,
+addition encloses center sums, coefficient sums and their rounding errors.
+Multiplication follows by expanding the product around floating center
+representatives. The remainder bound is
+
+ dx*Ry + dy*Rx + Ax*ey + Ay*ex + (Rx+ex)*(Ry+ey) + coefficient_error,
+
+where Rx,Ry bound coefficient radii, dx,dy bound center deviations and Ax,Ay
+bound center magnitudes. The source computes these nonnegative terms with
+outward bound operations. Unary operations use the mean-value identity
+about a center point, bounding slope deviation and input uncertainty.
+Reciprocal refuses an interval containing zero. Truncation adds discarded
+coefficient mass to the remainder. Promotion represents that remainder by
+a fresh coordinate. Neither removes a represented value.
+
+For a union choose any common coefficient vector a*. Branch i is covered
+by shifting its center by a radius at least e_i+sum|a_i-a*|. The implemented
+hull is therefore pointwise. The lattice helpers retain an operand only
+under whole-range dominance; otherwise the plain min/max interval covers
+the pointwise operation. Domain intersections are used only where the
+physical invariant or a second valid enclosure supplies their premise.
+
+These arguments prove the transfer contracts for arbitrary represented
+operand values, not just for values coming from physical trajectories.
+That stronger domain of validity yields the following useful lemma.
+
+OPEN IMAGE LEMMA. Freeze the pre-existing coordinates and all other operands.
+Suppose an intermediate form can represent an open interval about its actual
+value using only its unlabelled center/remainder freedom and coordinates
+allocated during this calculation. Suppose its remaining use is affine in
+that value with a nonzero actual coefficient, or is continuous and strictly
+monotone on a neighbourhood of that value. Sound arithmetic represents
+an open interval about the final actual value, while all old data stay fixed.
+
+Proof. Perturb the intermediate value slightly in both directions, within
+its represented interval. Keeping the other actual operand values fixed,
+the exact remaining expression changes to both sides of its actual value.
+Sound transfer operations contain both sides and everything
+between them. Error promotion may require different assignments to fresh
+coordinates for different perturbations; this is permitted. Truncation
+restores lost dependence as remainder freedom. Neither contracts the set
+of representable final values. For a hull, its pointwise union contains
+the perturbed selected constituent. End of proof.
+
+This is a projection statement over newly introduced coordinates. It does
+NOT assert an open center interval at one fixed assignment of all those
+new coordinates. That unnecessarily strong requirement caused the earlier
+strict-center route to stall, especially after a hull changed the center.
+The proof never varies an old physical parameter or an old external date.
+Freshness and the indicated expression use are essential.
+
+5. Instantiation at the actual guards
+-------------------------------------
+
+5.1 Scalar READY guard.
+At a positive elapsed probe u the scalar expression is
+
+ R+(q0-R)*exp(-K*u)+J*(exp(-K*u)-exp(-A*u))/(A-K)-1.
+
+If an ascending root exists from q0<1, J>0. The second exponential is a
+separate evaluated operand and appears with coefficient -J/(A-K), which
+is nonzero. Its expanded scalar exponential, or the expanded center of
+its affine unary evaluation, strictly encloses its exact value. The exact
+exp(0)=1 shortcut does not apply to a positive actual A*u when the argument
+is a plain exact zero; symbolic evaluation expands its center even at zero.
+The open image lemma supplies an open guard enclosure at positive probes.
+At elapsed zero the live-state fact q0<1 directly excludes a root.
+
+5.2 READY pulse memory.
+An increasing root from a below-threshold READY anchor requires a nonzero
+admitted pulse contribution. All pulse origins already stored at a live
+control point are at or before that point. Thus at a positive elapsed
+probe, at least one contributing pulse or nonzero raw tail has positive
+admitted age. Its amplitude is positive and constant during its own raw
+pulse, as justified in Section 7.
+
+For h(u) on 0<=u<=1, the symbolic branch uses the difference of two
+exponentials and a nonzero positive multiplier A/(A-K). The selected
+second exponential supplies the open operand just as above. The plain
+branch uses monotone endpoint bounds. At a positive actual age, its
+lower endpoint is strictly below the response: either the lower age is
+zero and the response is positive, or that endpoint exponential bound is
+strict. Its upper endpoint is strictly above the response. Thus the plain
+returned interval is open about that actual response.
+
+After raw end, the response h(1)*exp(-K*(age-1)) has a strictly enclosed
+positive h(1); its exponential multiplier is nonzero. For an age interval
+straddling 1, the lower bound is the minimum of the two endpoint bounds
+and the upper bound is h(1).hi, strictly above the exact peak. A positive
+actual response is strictly between them, including age exactly 1.
+
+For a tail, initial_age is physically in [0,1], admitted=min(elapsed,1-age)
+and after=max(0,elapsed-(1-age)). The lattice/domain operations occur BEFORE
+the response h(admitted) is evaluated. Choose a term whose actual admitted
+duration is positive. The resulting h operand is open as just proved and
+is subsequently multiplied only by its positive gain and positive decay
+factors. No clipping follows that response. Terms with zero contribution
+need supply no slack. Summing the memory therefore retains an open guard
+enclosure. This includes hull-enclosed gains; their center need not be
+positive, since the open image lemma uses the actual nonzero multiplier.
+
+5.3 SLOW and per-order return guards.
+ell=ln(2.5)-capped_dose. The logarithm is evaluated with adjacent-number
+expansion, not an exact ln(1) shortcut. Holding the dose fixed, its use has
+coefficient +1, or -1 for -ell. Each selected history consequently has an
+open guard enclosure; the history union retains it. Live probes use already
+processed mark-end information only after those ends. Return probes starting
+at F+1 use live=False, so a probe before a recorded mark end still uses the
+unfinished primitive. This is explicit in return_with_marks.
+
+5.4 Auxiliary roots and first-delay comparisons.
+Their guards have the same positive M*h(u) structure, with initial charge
+strictly below 1. They use the same open exponential response. The later
+per-port D0 is fixed for a fixed physical M and may be reused at every pulse.
+The first-delay D1 is an outer abstraction of the allowed initial transient.
+
+Correction to an earlier source description: D1_PORTS in the effective
+port_box_adapter are distinct affine symbols about the plain D1 midpoint,
+one per port. They are not plain occurrences. Each is used for that port's
+first input only, and its radius outwardly covers D1, so the abstraction
+still covers every physical first delay without equating different ports.
+
+6. Root refinement, strict ordering, and fresh return identities
+---------------------------------------------------------------
+
+Fix an actual root. An accepted bracket has f(l).hi<=0, f(h).lo>=0 and a
+strictly positive derivative bound. If a positive endpoint were the actual
+root, Section 5's open guard enclosure would extend to both sides of zero,
+contradicting the corresponding accepted sign. At elapsed zero the initial
+mode invariant supplies strict sign. Therefore l<r<h.
+
+At every Newton step, choose a mean slope s>0 such that r=m-f(m)/s.
+For a smooth segment this is f'(xi); across raw cuts use the integral
+average of the piecewise derivative, which lies in its enclosing interval.
+When r=m, any positive enclosed slope gives the identity. The source
+evaluates S=deriv(T) BEFORE fun(I(m)). Freeze the
+representation of s in S. The subsequent guard evaluation supplies fresh
+open freedom, independent of that fixed S. Division by s and subtraction
+from m preserve an open interval about r by the open image lemma. Passing
+to plain bounds and intersecting with the previous strict bracket keeps r
+strictly inside. Induction proves noncollapse for all finite contractions.
+
+If rounding of an extremely small nonnegative midpoint produces m=0,
+the live-state guard f(0) is strictly negative. Instead of varying f(0),
+vary the enclosed mean slope in S while holding f(0) fixed. At positive
+probes the scalar derivative has a separate exponential with nonzero
+coefficient A*J/(A-K). Memory derivatives use expanded pulse derivatives,
+positive raw-current exponentials, or nonzero decaying tails. Their
+pointwise enclosures and convex projection over new coordinates enclose
+an open interval about the positive mean slope, including an average
+across cuts. The selected derivative exponential is not reused by the
+subsequent guard evaluation. Since -f(0)/s is strictly monotone for
+positive s and f(0)<0, the Newton image is open here as well. SLOW may
+instead use its open logarithmic guard even at zero. No assumption that
+a rounded midpoint is strictly positive is necessary.
+
+affine_refine returns either such a correlated Newton image or a previously
+retained image/plain bracket. Every choice encloses an open neighbourhood
+of r with old inputs fixed. This remains true if a correlated image is
+slightly wider than the previous bracket. The mean-value identity, not
+subset containment, justifies its root inclusion.
+
+The scalar ready_root first bounds the root by the upper and lower scalar
+comparison solutions. Monotonicity in q0 and J orders their first roots.
+Strict outward endpoints for the comparison roots make the combined plain
+bracket strict, including a physical realization at either parameter
+extreme. Its subsequent correlated refinement is covered by the same
+argument. Failure of an extremal root call causes refusal, not omission.
+
+Every ordinary accepted root duration is consequently nonpoint. Its final
+shift allocates a new time atom, absent from the older exterior queue and
+control state. For a small abstract perturbation of the root duration,
+the shifted base and the time expression can both be represented using
+their fresh arithmetic witnesses with all old data fixed. Subtracting an
+old exterior date therefore has values on both sides of the actual date
+difference. The new duration atom does not cancel in the expression path.
+The absolute-box subtraction and the expression subtraction each strictly
+enclose that difference; choosing the narrower remains strict.
+
+Hence a weak accepted lower-bound comparison >=0 against an ordinary root
+actually proves strict physical ordering. A true simultaneous READY fire
+or nonconstant SLOW return cannot pass that ordinary ordering branch.
+Strict counterfactual-charge/log-charge ordering proofs already have the
+same conclusion by continuity and first-root uniqueness. Constant recovery
+uses explicit strict comparisons and otherwise refuses. Unresolved cases
+must pass a covering macro or prevent a complete result.
+
+For FAST/SLOW, exact equality is explicitly normalized by the causal wrapper.
+If another weak-boundary representation processes an exterior action first
+at F+1, the pending fixed section remains in fire+1, both modes have identical
+gates, and the next advance/macro normalizes it without positive elapsed
+time. Thus no observable event or actuator transfer is lost. This is the
+specific boundary exception in I2, not a general priority convention.
+
+Distinct calls to return_with_marks create distinct nonpoint-duration atoms.
+Restricting a return's absolute box in the local solver preserves its
+expression and therefore preserves that distinct atom. It cannot turn two
+separately recomputed returns into the same memory anchor token.
+
+7. Initialization and the exact continuous/gated maps
+----------------------------------------------------
+
+The initialization slab endpoint in effective settings is the POINT
+U0=upper(2*delta/(LE*RM)). Every allowed terminal-ERROR remainder ends
+before it: ln(1+delta/RM)/LE <= delta/(LE*RM) < U0. Main and auxiliary
+charges remain below threshold on this slab by the previously checked
+uniform bounds. The main charge is enclosed by
+
+ R+[-delta,delta]*exp(-K*U0)+[0,3*Cmax*A*U0].
+
+Each initial ERROR deposits at most 8*delta in its log-gain, so the stored
+initial offset [-delta,9*delta] covers it. Initial b remains .08±delta.
+Active source tails at U0 are retained. Fast/slow auxiliary comparison
+roots cover D1; later roots cover D0. The independent initial certificate
+provides additional finite checks of these uniform inequalities.
+
+Every auxiliary cycle ends before age 1.3; ERROR starts after its own raw
+end. Main interfire time exceeds 1+ln(2.5)/1.1 >1.3, and source gaps are 8.
+Thus every subsequent input on a port sees auxiliary rest, and each port's
+gain is constant during its own raw pulse. The initially overlapping ERROR
+is entirely absorbed into the initial slab bound before this argument is
+used. Distinct fixed port constants retain distinct physical choices.
+
+Variation of constants gives the scalar READY formula in Section 5. For
+memory, each new pulse contributes g*h(age) until age 1 and then its
+homogeneous tail. An already-active raw pulse at reopening contributes
+
+ g*exp(-A*v)*h(min(u,1-v))*exp(-K*max(u-(1-v),0)),
+
+with physical v in [0,1]. Its derivative is -K times that response plus
+the actual admitted current. These are the implemented memory expressions.
+Without a new arrival, the derivative cannot change from negative to
+positive: between cuts d'=-K*d-A*J, and cuts decrease d. Thus an ascending
+threshold root is the first crossing. SLOW has ell'=-b<0 and a unique return.
+
+Actuator histories integrate charge transfers exactly before outward
+enclosure. A full MARK gives .1 to b; a full ERROR gives .6 to z. Partial
+gates retain their origins and endpoints. The nonnegative potential is
+projected to the physical cap. Certain log-gain saturation is declared
+only when offered.lo >= TARGET.hi, so a smaller lower cap cannot falsely
+force saturation for a larger physical cap. Partial MARKs intercepted at
+firing end within DM<1, hence before F+1; their final transfer correctly
+acts throughout SLOW. New marks use their time-dependent primitive.
+
+For a cap-contact bracket [l,u], the uncapped integral to y0 followed by
+the cap exceeds the true dose by a nonnegative amount at most
+(u-l)*max(|raw_rate(l)-B|,|raw_rate(u)-B|). The optimized evaluator subtracts
+[0,error] only when contact is certain before the earliest endpoint.
+Otherwise monotone quadrature encloses the contact strip. Intersections
+with 0, B*duration and the uncapped dose are physical upper/lower bounds.
+
+Completed-history folding replaces only additive completed contributions.
+After folding, identical remaining fire/mark or active-deposit structure
+can hull its baseline pointwise. Active endpoints remain explicit. Keeping
+the ledger unions preserves the selected physical branch; removing unused
+condition labels enlarges the set. Budget exhaustion fails closed.
+
+The uniform work bound is <240.566579<500. At E=50 the pump is 500 and
+dominates consumption; at E=100 its derivative is nonpositive. This proves
+E in [50,100] and justifies the continuously open power gates. It uses the
+physical charge/cap phase bounds above, not sampled energy trajectories.
+
+8. Event coverage and all successful macro exits
+------------------------------------------------
+
+For each physical exterior weak order, admissible_orders retains a path:
+the next physical event cannot violate a certified strict time contradiction,
+an absolute-order bound, or its actual port automaton stage. Equality is
+not pruned. The suffix minimum examines every unprocessed lower bound, so
+an overlap group cannot omit an event strictly inside its common endpoint.
+Events exactly at an endpoint may be consumed with zero elapsed time.
+
+Artificial lower group endpoints require an additional forward-entry
+argument; nonnegative duration clipping alone is not that argument.
+GROUP_ENTRY_CLOCK_LEMMA_EN.txt supplies the complete control-path split.
+In particular, FAST-section absolute overlap is intercepted by the protected
+macro BEFORE ordinary advance. That macro checks group-lower >= control-upper.
+Ordinary FAST-to-SLOW normalization while approaching a single event can
+therefore leave SLOW only with its section box wholly before the original
+group minimum. Recovery extension cannot decrease that minimum. Combined
+with consumed-block queue separation and internal steps certified before
+an existing point L, this proves every successful live group entry is
+physically forward. No backward SLOW staging convention is needed.
+
+(i) Ordinary advance is sound by the scalar/memory formulas, first-root
+argument and Section 6. If a maximum is strictly below 1 there is no fire.
+If J=0, a below-threshold charge relaxes toward R<1. A strict no-fire cover
+proves the same fact on every closed piece. Every other unresolved guard
+causes a covering macro or a refusal.
+
+(ii) Ordinary exterior groups follow all retained orders and require
+guardfree flow on each subsegment. The actual order survives and reaches
+the common endpoint with its original emission prefix. Joining q and the
+histories covers it; compatible modes/raw origins are checked.
+
+(iii) Protected FAST/SLOW groups use the same closed READY/gain gates and
+open protected-MARK gate on both sides of F+1. Accumulate all marks in the
+actual exterior order. If a first return occurred before the endpoint, the
+continued-protection ell would be zero there and strictly decrease after
+it, contradicting the accepted endpoint ell.lo>0. Therefore no return
+occurred. Normalizing the endpoint to SLOW q=R*exp(ell) is valid even though
+the temporary FAST q used during the macro was not a physical SLOW charge.
+
+(iv) Recovery/auxiliary groups predict a return independent of the included
+events; the caller excludes raw changes and new effective marks. Insert
+that one return among all weak exterior orders. Reopening sets q=R and
+opens the correct ERROR gates. Subsequent guardfree propagation and q.hi<1
+exclude a new fire. Coincident finite currents have zero integral over a
+zero-duration gate interval, so both weak orders cover equality.
+
+(v) The local-cycle resolver recomputes the return using each order's marks.
+It prunes only strict contradictions or empty physical phase intersections.
+Its window is narrower than 1 after the earliest return; at most one new
+fire can occur and its FAST phase covers the remaining window. The installed
+READY helper uses an elapsed-time root cover with the original anchor.
+The true root cannot be excluded by a slab whose whole charge excludes 1.
+The complementary no-fire endpoint lies in [0,1]. An actual new fire has
+a retained emission branch. The single-train caller joins only a nonempty
+forest with NO new emissions and EVERY branch READY; otherwise it refuses.
+Thus a successful zero-emission join cannot hide a physical threshold at
+its endpoint. The grouped-recovery fallback uses the identical rule.
+
+(vi) All 202 successful recorded fire/exterior commutations have one
+mark_off, two orders and zero fire-time widening. That action does not
+change READY charge, so both orders share the same first fire. If the
+mark ends before firing, none remains. If firing comes first, its remaining
+transfer is retained under protection; at equality the transfer is zero.
+The join is after both events and before F+1 and the next pending event.
+One common fire and no READY memory cover every realization. The full
+relative_order_proofs list is exported without the truncation used for the
+twelve largest-width diagnostics, so this specialization is supported by
+the complete recorded use list. A general claim for unobserved raw-arrival
+commutations is not needed for this campaign theorem.
+
+This conclusion covers BOTH ways _fire_root constructs its first-fire
+enclosure. If the ordinary root search raises an accepted exception, it
+calls _first_crossing_cover. The caller has already certified f(hi).lo>=0,
+and the cover requires f(0).hi<0, where f(u)=Q(t0+u)-1. For each parameter
+realization, continuity therefore gives a first threshold time in [0,hi].
+The cover scans closed slices from left to right. A slice with f.hi<0
+contains no threshold time and is skipped; the left endpoint of the first
+undecided slice is retained as the lower bound. A slice with f.lo>=0
+certifies a crossing no later than its left endpoint and supplies an upper
+bound; absent such a slice, hi remains the certified upper bound. Thus the
+returned interval encloses every realization's FIRST threshold time, even
+with tangency or nonmonotone charge, without any slope assumption. In the
+recorded mark_off-only commutations this encloses the same physical first
+fire in both orders, which is all the macro argument above requires; the
+ordinary-root strict-interior lemma is not needed for this fallback.
+The saved commutation records do not distinguish the two construction
+paths, so no assertion is made that the fallback was unused in the 202
+successful commutations. The upper endpoint condition is Q>=1, not Q>1.
+
+Spurious prefixes or extended virtual states may fail an assertion and
+abort the whole cell; this cannot delete an actual path while still
+producing a complete result. Optional emissions cannot become a single
+unconditional train through a successful local join.
+
+9. Memory anchors and retained discrete fields
+-----------------------------------------------
+
+dep.join keeps the first anchor/origin objects and hulls charges/amplitudes.
+The required condition is stronger than equal tokens: those retained objects
+must cover the common physical dates for every joined branch. At every
+reachable successful caller this follows as follows.
+
+Ordinary exterior joins inherit one incoming memory anchor. Added origins
+come from the immutable common queue. Recovery/auxiliary joins create their
+memories with one common predicted-return object and the same active raw
+origins. Protected and recorded fire-commutation joins have memory=None.
+
+Local-cycle branches recompute returns separately. By Section 6 each
+nonpoint duration carries a distinct fresh atom, retained by absolute
+restriction. Different return anchors therefore fail dep.join's token test
+and memory is dropped. For one branch its own memory is kept. The same
+argument covers the joint-return helper if used. Dropping memory removes
+correlation but does not remove the scalar charge or any actual path.
+
+This excludes the earlier same-token/different-restricted-box countermodel
+from these call sites. It does not claim dep.join is sound on arbitrary
+invented memories. Active raw/MARK/ERROR origins are also common: per-port
+cycles do not overlap and the common processed queue prefix determines the
+unique active cycle. Stale inactive origin fields have no physical effect.
+At local zero-emission joins the incoming main fire identity remains common;
+at fire commutations the new fire object is explicitly common. Thus the
+first branch's retained discrete fields do not identify different live
+physical events.
+
+10. Induction to the learning terminal section
+----------------------------------------------
+
+The initial-slab argument establishes I1-I5 for every physical realization.
+Sections 4-9 show that every successful ordinary or macro successor retains
+a covering path and extends its noise witness without changing old physical
+choices. Every accepted emission is a physical first crossing for that
+realization; every physical emission is either processed or appears as an
+optional branch that would prevent a zero-emission success. Finite counters
+and budgets cannot produce a success by truncating unfinished work.
+
+Induction over a completed cell loop yields its complete physical output
+history and terminal state. The terminal checks require READY main and
+auxiliaries and no active raw input. The end event is at 1116. Queue
+construction, ordering and consumption account for every earlier exterior
+action. A terminal ambiguity cannot be converted into a successful receipt.
+
+For layer 1 the source dates are exactly 8k. Assume the complete common
+parent histories have covering global witnesses through layer n-1. A cell
+in layer n loads those same parent definitions, extends only its own fresh
+namespace and applies the local result. Its witness extension cannot alter
+the parent dates already used by another child. Proceed cell by cell and
+layer by layer. Acyclic feedforward composition establishes joint coverage
+of all 216 terminal states, not merely independently resampled marginals.
+
+The passive audit ties this argument to the recorded run: all 216 complete
+typed payloads, their receipts and parent lineage were authenticated; the
+87 source files agree with the supplied source archive and the recorded
+program snapshots. The retained clock audit found no conflicting definition
+among 63,888 distinct atoms. Those facts bind the proof target and data;
+they are not being used as substitutes for the local argument above.
+
+The terminal extraction and physical caps place the resulting state in Q.
+For quiescent auxiliary ports that have fired, m=RM exactly; silent ports
+retain their certified relaxation intervals. Influential gains use their
+terminal enclosures; potentially plastic masked gains use the certified
+extension to their physical caps. Thus H_entry follows under A1-A4.
+
+11. Composition with the established future theorem
+---------------------------------------------------
+
+The previous independent inequalities and future proof show P_h(Q) subset Q
+for every admissible canonical future pulse with gap h>=20. All active cells
+fire once per wave and the whole network is quiescent before 12.791, leaving
+more than 7.209 idle time. A fixed device and its fixed influential gains at
+entry have fixed cell latencies, so the future source word is preserved by
+time translation. These statements do not equate latencies across different
+devices or different entry states.
+
+Combining this return theorem with Section 10 gives learning-to-future
+invariance for every admissible initial state and fixed device in the
+specified family, under A1-A4. Continuous-time invariance uses the previously
+defined between-section flow tube, not Q alone during a firing cycle.
+
+The two earlier countermodels remain valid warnings against weaker
+contracts. Their missing hypotheses are supplied here by the fresh open
+root-image argument and the reachable memory-anchor analysis. This is the
+mathematical closure claimed by this document. An independent expert review
+or formalization can audit that claim; neither has been represented as
+already completed. The archive's experimental_not_qualified status remains
+an accurate description of the original software certification level.

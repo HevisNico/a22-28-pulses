@@ -1,0 +1,83 @@
+def advance(s,boundary,cell,count):
+    """Reach boundary, or process a rigorously earlier internal guard."""
+    H=boundary.minus(s['t']).nonnegative().hi;q=s['q'];b=s['b'];J,cg,cb=coefficients(s);cs=sum(cb,I(0));candidates=[(boundary,'external',-1)]
+    def candidate(u,kind,j=-1):
+        tt=shift(s['t'],u,f'{cell}:{count}:{kind}:{j}')
+        if tt.box().lo<=boundary.box().hi:candidates.append((tt,kind,j))
+    if H>0:
+        if s['p']==0 and J.hi>0:
+            bb=J/(A-K);aa=q-R+bb;pk=(A*bb/(K*aa)).ln()/(A-K)
+            peak=I(max(D(0),pk.lo),max(D(0),pk.hi));x=I(min(H,peak.lo),min(H,peak.hi))
+            legacy_max=v.ready(q,J,x)
+            memory=s.get('memory')
+            if memory is None:
+                f=lambda u:v.ready(q,J,u)-1
+                df=lambda u:-K*(q-R+bb)*(-K*u).exp()+A*bb*(-A*u).exp()
+                possible=legacy_max.hi>=1
+            else:
+                probe=lambda u:shift(s['t'],u,f'{cell}:{count}:probe')
+                f=lambda u:dep.evaluate(memory,probe(u))-1
+                df=lambda u:dep.evaluate(memory,probe(u),True)
+                memory_max=dep.evaluate(memory,probe(I(0,H)))
+                possible=min(legacy_max.hi,memory_max.hi)>=1
+            if possible:
+                hi=min(H,peak.lo)
+                if f(I(hi)).lo<0:raise v.Ambiguous('ready guard still overlaps external boundary or possible tangency')
+                if memory is None:root=ready_root(q,J,hi)
+                else:root=v.root(f,df,D(0),hi,v.guessroot(f,hi))
+                candidate(root,'fire')
+        elif s['p']==1:
+            tt=s['fire'].plus(1)
+            if tt.box().lo<=boundary.box().hi:candidates.append((tt,'slow',-1))
+        elif s['p']==2:
+            exact=constant_recovery(s,cell,count)
+            if exact is not None:
+                difference=exact.minus(boundary)
+                if difference.hi<0:
+                    out=reopen(s,exact)
+                    if PROFILE is not None:PROFILE.guard('ready',exact)
+                    return out,'ready'
+                if difference.lo>0:return flowing(s,boundary),'external'
+                raise v.Ambiguous('constant recovery relative order unresolved')
+            anchor=s['t'];common=v.T(f'{cell}:{count}:recovery-anchor',I(s['t'].box().hi))
+            if common.box().hi<boundary.box().lo and ac.bounds(s['actuation'],common,'ell').lo>0:anchor=common
+            HH=boundary.minus(anchor).nonnegative().hi
+            probe=lambda u:shift(anchor,u,f'{cell}:{count}:recovery-probe')
+            f=lambda u:-ac.bounds(s['actuation'],probe(u),'ell')
+            df=lambda u:ac.bounds(s['actuation'],probe(u));val=f(I(HH))
+            if val.lo>=0:
+                root=v.root(f,df,D(0),HH,v.guessroot(f,HH))
+                tt=shift(anchor,root,f'{cell}:{count}:ready:-1')
+                if tt.box().lo<=boundary.box().hi:candidates.append((tt,'ready',-1))
+            elif val.hi>=0:raise v.Ambiguous('recovery guard overlaps external boundary (actuation history)')
+    candidates.sort(key=lambda a:a[0].box().mid());tt,kind,j=candidates[0]
+    if not all(x.minus(tt).lo>=0 for x,_,_ in candidates[1:]):
+        proof=None
+        internals=[x for x in candidates if x[1]!='external']
+        if len(internals)==1 and internals[0][1]=='fire' and s.get('memory') is not None:
+            margin=dep.evaluate(s['memory'],boundary)-1
+            if margin.lo>0:
+                # The counterfactual ready trajectory is continuous and the
+                # candidate is its certified first increasing root. A positive
+                # charge at the actual exterior date proves the root earlier,
+                # even when their independent absolute date boxes overlap.
+                tt,kind,j=internals[0];proof=dict(guard='fire',margin=margin.pair(),predicate='q(boundary)>1')
+        elif len(internals)==1 and internals[0][1]=='ready' and s['p']==2:
+            margin=-ac.bounds(s['actuation'],boundary,'ell')
+            if margin.lo>0:
+                tt,kind,j=internals[0];proof=dict(guard='ready',margin=margin.pair(),predicate='ell(boundary)<0')
+        if proof is None:
+            raise v.Ambiguous(json.dumps(dict(reason='internal guard order',cell=cell,count=count,phase=s['p'],time=s['t'].box().pair(),q=s['q'].pair(),z=[x.pair() for x in s['z']],b=s['b'].pair(),candidates=[dict(kind=k,port=j,time=t.box().pair()) for t,k,j in candidates])))
+        if PROFILE is not None:PROFILE.relative_order_proofs.append(dict(cell=cell,batch=count,**proof))
+    s=flowing(s,tt)
+    if kind=='fire':s=fire_reset(s)
+    elif kind=='slow':s['q']=I('.25');s['p']=2
+    elif kind=='ready':
+        s['actuation']=ac.unique(ac.finish(h,tt) for h in s['actuation'])
+        s['b']=ac.bounds(s['actuation'],tt);s['bstop']=s['b'].lo==s['b'].hi==D('1.1')
+        s['q']=R;s['p']=0;s['memory']=new_memory(s)
+        s['depot']=tuple(tuple(dz.open_gate(h,j,s['err'][j],tt,False) for h in hs) if s['aux'][j]==3 else hs for j,hs in enumerate(s['depot']))
+    elif kind=='gstop':s['z']=s['z'].copy();s['z'][j]=Z;s['caps']=s['caps'].copy();s['caps'][j]=True
+    elif kind=='bstop':s['b']=I('1.1');s['bstop']=True
+    if PROFILE is not None and kind!='external':PROFILE.guard(kind,tt)
+    return s,kind

@@ -1,0 +1,22 @@
+name = "a22_strict_root"
+defaultTargets = ["StrictRoot", "PeakBounds", "CommutationE", "FirstCrossing", "FutureWave"]
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "v4.35.0"
+
+[[lean_lib]]
+name = "StrictRoot"
+
+[[lean_lib]]
+name = "PeakBounds"
+
+[[lean_lib]]
+name = "CommutationE"
+
+[[lean_lib]]
+name = "FirstCrossing"
+
+[[lean_lib]]
+name = "FutureWave"

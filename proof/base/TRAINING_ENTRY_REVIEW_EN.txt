@@ -1,0 +1,401 @@
+A22 v3.3 — TRAINING ENTRY: SOURCE CORRESPONDENCE AND REMAINING PROOF GAP
+Review date: 22 October 2026
+
+Status
+
+The future-invariance theorem is established for the explicit terminal domain Q,
+with two independent finite inequality checkers. The present work adds a checked
+initial-section lemma and a detailed review of the v3.3 training transformations.
+It does NOT certify an unconditional theorem for the entire training family.
+In particular, this review must not be cited as an independent qualification of
+all 537,492 recorded continuous evaluations and 22,891 branch unions.
+
+No campaign, cell replay, original test suite, native build, or original engine
+import was run. The supplied campaign program was not changed. Independent
+scripts read existing JSON data and check finite mathematical inequalities.
+
+The campaign has run_id f29efeaf7ff44d09bbce1e149630f39a and kernel_id
+65cf7b7776347fa8de24fa5e1c357e98ee0f90c4bb8d65f694610fb26db3b25c.
+The earlier provenance audit authenticated all 216 payloads, all 18 completed
+layers, their receipt lineage and the supplied program snapshots. The scientific
+status stored by the campaign remains experimental_not_qualified.
+
+1. Exact theorem being sought
+
+Let Theta be the product of the fixed independent per-port parameter intervals,
+with relative radius 10^-4. Let X0(theta) be the full initial set in reference
+sections 1–5, with initial radius 10^-5, permitted terminal ERROR phases, and no
+hidden pulses. Let Reach_train(1116; X0(theta)) include every trajectory under
+128 canonical source pulses at times 8k, k=0,...,127, and the declared weak-order
+semantics. The missing application premise is
+
+  H_entry: for every theta in Theta,
+           Reach_train(1116; X0(theta)) is a subset of Q(theta).
+
+All future results apply to every point of Q(theta), independently of how that
+point was obtained. Their proof therefore remains useful and valid even while
+H_entry is open. A new numerical campaign with the same program would not, by
+itself, prove the missing soundness statement.
+
+2. Initial-section lemma: analytic argument and new independent certificate
+
+Write delta=10^-5, r=.1, rm=.025, kappa=.5 and a=ln 4. An initially unfinished
+ERROR phase has at most delta charge left to drain and a drain at least
+LE_min*rm. It therefore ends by delta/(LE_min*rm). The implemented initial
+section U0 is an outward upper bound for 2*delta/(LE*rm), with more than enough
+margin. The independent certificate gives a safe upper bound
+
+  U0 < 0.000086571.
+
+While the principal unit is READY, q' <= kappa(r-q)+3*Cmax*a. Consequently
+
+  q(t) <= r+delta+3*Cmax*a*U0 < .101451 < .2
+
+through this section. An auxiliary READY charge is bounded by
+
+  m(t) <= rm+delta+Mmax*a*U0 < .029312 < 1.
+
+These bounds also justify the bootstrap: no main firing or new auxiliary
+threshold can invalidate the assumed modes before the initial section ends.
+They are uniform over all cells; the feedforward graph introduces no hidden
+initial source. Each residual initial error offers at most 8*delta to its own
+log-gain. Thus z_i at U0 is enclosed by
+
+  ln(g_nom,i) + [-delta,9*delta].
+
+The main remains READY, so initial marks do not actuate b; b remains in
+[.08-delta,.08+delta]. The q enclosure used by unit is the variation-of-constants
+bound r+[-delta,delta]*exp(-kappa*U0)+[0,3*Cmax*a*U0]. Keeping active source
+pulse tails in the initial memory is necessary and is done by new_memory.
+
+For the first auxiliary threshold, the fastest comparison starts READY with
+charge rm+delta and full pulse amplitude Mmax. A conservative slow comparison
+allows admission to begin as late as U0, starts with rm-delta, and attenuates
+the remaining pulse by exp(-a*U0). The threshold response is
+
+  rm + initial_error*exp(-kappa*u) + M*attenuation*h(u),
+  h(u)=a/(a-kappa)*(exp(-kappa*u)-exp(-a*u)).
+
+The new checker brackets both comparisons and proves a positive derivative
+on [0,.1]. It encloses the first response delay in
+
+  [0.0199977548461674814..., 0.0200912627244672141...].
+
+The D1 abstraction may forget its correlation with initial charge and device
+parameters; this enlarges the set. It does not require the first delay to be
+an additional physical parameter. Later inputs see exact rm because the previous
+auxiliary cycle has ended. Their delay is D0, obtained from rm+M*h(u)=1.
+
+The same independent script proves both first and later ERROR starts occur
+after raw pulse end, all auxiliary cycles finish before age 1.3, and the main
+minimum interfire duration 1+ln(2.5)/1.1 exceeds 1.3. These are uniform physical
+separation facts, rather than observations of nominal event dates.
+
+The work bound is <240.566579<500. At E=50, E'>0; at E=100, E'<=0. This gives
+E in [50,100] and keeps every power gate open. The argument uses phase bounds
+on charges and projected caps; it does not replace E by a sampled trajectory.
+
+Evidence: initial_section_certificate.json and certify_initial_section.py.
+The time in the certificate is a safe independently computed upper bound,
+not a claim to reproduce the engine's 160-digit rounded U0 bit for bit.
+
+3. Physical parameter routing
+
+The effective installation order is affine arithmetic; explicit temporal
+identities; the legacy hybrid maps; corrected READY helpers; root and history
+adapters; the plain physical-parameter adapter; the per-port symbol adapter;
+and the strict no-fire fallback. The shared-symbol settings still present in
+engine.py is superseded before compute_cell calls settings_cell.
+
+Each fixed physical LM_j, LS_j, LE_j and M_j has its own cell-and-port symbol.
+D0_j uses M_j. DM_j, DS_j and DE_j use the corresponding per-port rates.
+Generated unit code uses those port-specific durations. The first-response D1
+boxes and gain caps C_j retain conservative plain interval representations.
+
+The actuation wrappers select LM from Segment.port for charge, increment,
+transfer, final potential and raw-dose contributions. The nested wrapper saves
+and restores the previous context with try/finally. Deposit offered values and
+folding similarly select LE from the history's segment port. When the port
+cannot be uniquely selected, the ordinary interval includes every port value.
+Full transfers .1 and .6 are independent of the decay coefficient.
+
+Workers run in separate processes. Module-global temporary port contexts must
+not be shared concurrently by threads; the supplied worker path does not do
+that. This is an implementation precondition of the wrapper design.
+
+For any fixed theta, choose normalized coordinates representing each physical
+constant. Every plain occurrence may choose that same value. Valid interval
+operations then contain the physical realization. Mixing these abstractions
+adds freedom without forcing equality between different physical ports.
+
+4. Affine arithmetic: the local algebra behind the implementation
+
+A form denotes c + sum a_k*eps_k + e*[-1,1], with directed Decimal interval c,
+binary64 coefficients a_k, and an outward nonnegative remainder e. The noise
+coordinates include physical parameters and existential abstraction errors.
+For each physical trajectory an assignment must exist, consistent wherever a
+coordinate is reused. Independence is a conservative enlargement.
+
+Addition sums centers outward, coefficients with coefficient-rounding error,
+and remainders. For multiplication, with floating center representatives mx,my,
+center deviations dx,dy, coefficient radii Rx,Ry, and center magnitudes Ax,Ay,
+a valid error bound beyond the outward center product and linear coefficients is
+
+ dx*Ry + dy*Rx + Ax*ey + Ay*ex + (Rx+ex)*(Ry+ey) + coefficient_rounding_error.
+
+This is the formula in affine_iv.__mul__. It follows by expanding the product
+and bounding each omitted term in absolute value. The unary construction follows
+f(x)=f(x0)+s*(x-x0), with the derivative enclosed over the whole segment between
+x0 and x. It bounds the selected slope's error, center radius, input remainder
+and coefficient rounding separately. exp, log and reciprocal use their proper
+slope intervals; reciprocal refuses any interval containing zero.
+
+A removed coefficient contributes at most its absolute value to the remainder.
+A promoted remainder is represented by a NEW noise coordinate. Reusing that
+coordinate later is valid only for reuse of the same constructed quantity.
+Producer namespaces and monotonically increasing counters are therefore semantic
+requirements, not just serialization details.
+
+The native primitives use nonnegative nextafter-expanded sums/products and
+full adjacent-spacing error bounds for rounded coefficient operations. Zero and
+exact sign changes have explicit exact cases. Each bound operation is inflated
+separately; there is no unproved single inflation factor. Non-finite arithmetic
+fails closed. The build recipe disables fast math and floating contraction;
+the native import checks binary radix, binary64 mantissa/exponent and nearest
+rounding mode. The source formulas were reviewed. The stored binary has a known
+hash, but this task did not rebuild it or establish a verified compiler theorem.
+
+Decimal exp/log use correctly rounded scalar results expanded by adjacent
+Decimal numbers; their cache key includes the arithmetic context. Accepting this
+implementation relies on that library contract. The independent future checker
+avoids these exp/log library calls, but does not retroactively validate every
+training operation.
+
+A common-generator hull is a pointwise outer union: for any chosen a*_k,
+branch i differs from sum a*_k eps_k by at most e_i+sum|a_ik-a*_k| plus its center
+interval. The implementation encloses these differences outward. The min/max
+adapters keep an operand only when its whole range dominates the other;
+otherwise they return the ordinary interval bound. Intersection is legitimate
+when both operands enclose the SAME physical quantity; numerical overlap alone
+is not a proof of that premise.
+
+5. Clock identities and the new global saved-data check
+
+Time creation allocates a fresh producer-scoped atom. plus and copy preserve
+its expression; shift adds a fresh duration atom unless the duration is exact.
+Time subtraction cancels equal atom identifiers only after checking identical
+affine definitions. A display label is not an identity. Exact decimal offsets
+are converted through rational arithmetic with an exactness check.
+
+The time token is a normalized expression: constant terms contribute their exact
+rational value; nonconstant atom multiplicities are collected. For sound event
+grouping, equal tokens must describe the same physical quantity. This follows
+for permitted constructors under the maintained atom-identity invariant. An
+absolute time box and an expression-derived time bound may both enclose the
+same event; choosing the narrower is then valid. A restriction of an absolute
+box must not replace the original physical time expression.
+
+The new passive audit authenticated and inspected all 216 payloads. It found:
+
+  22,998 retained time nodes;
+  492,321 time-atom occurrences;
+  63,888 distinct time-atom identifiers;
+  zero conflicting definitions, including across different cell files.
+
+This is stronger than a per-file consistency check. It rules out one concrete
+failure in the retained evidence. It does not reconstruct discarded probe times
+or prove physical meaning just from matching atom definitions.
+
+6. Flow equations and first crossings
+
+Between consecutive raw boundaries, a READY principal charge with constant
+admitted gains has the exact form
+
+ q(u)=r+(q0-r)*exp(-kappa*u)
+          +J0*(exp(-kappa*u)-exp(-a*u))/(a-kappa).
+
+A port's gain cannot change during its own raw pulse: its ERROR starts strictly
+after raw end, and the next pulse follows completed auxiliary recovery. Thus
+using its gain at admission in the memory is justified. The scalar flow and
+pulse memory are two representations of the same READY solution.
+
+The memory separates the homogeneous initial charge, full admitted pulses and
+raw tails already present at reopening. A tail of initial age v and remaining
+duration 1-v contributes
+
+ g*exp(-a*v)*h(min(u,1-v))*exp(-kappa*max(u-(1-v),0)).
+
+The implemented tail derivative is -kappa times this response plus the current
+while admission remains active. Intersecting its initial age with [0,1] requires
+that the tracked raw flag really denotes a currently active pulse. That is a
+relational state invariant, not a property of the marginal interval alone.
+
+The usual root path verifies lower/upper endpoint signs and strictly positive
+derivative on the accepted bracket, then applies interval Newton. A correlated
+refinement follows the mean-value identity
+
+ t*(eps)=m-f(m,eps)/f'(xi,eps).
+
+This retains every bracketed root under valid pointwise enclosures. A numerical
+Brent proposal or cached radius never accepts a predicate. First-crossing status
+requires an additional argument: starting below 1 and with no new raw arrival,
+the scalar solution is unimodal. More generally, existing raw cuts only decrease
+the input, so a derivative crossing from negative back to positive is impossible
+before another arrival. Thus an increasing threshold root is the first one in
+the relevant READY segment. A bracket alone would not establish this.
+
+SLOW uses ell(t)=ln(2.5)-integral b, with ell'=-b<0. It therefore has a unique
+reopening root. The constant-rate shortcut is restricted to histories already
+at the cap by the FAST/SLOW section. Other recovery roots use the integrated
+actuation histories. Root probing backward through a recorded mark end uses
+unfinished primitives where required, notably return_with_marks(...,live=False).
+
+The conditional first-guard cover used by the local resolver retains the elapsed
+anchor, bounds the possible root interval using scalar comparisons, and discards
+a slab only if its complete charge enclosure excludes 1. It does not claim that
+all parameters fire. The complementary no-fire endpoint is retained in [0,1],
+including initial READY charges below r. Different emission counts remain
+separate; they are not converted into one pulse train.
+
+7. Integrated marks, errors and compression
+
+An admitted charge drain from x to y contributes exactly gain*(x-y). A complete
+MARK therefore contributes .1 to b; a complete ERROR contributes .6 to z. A
+partial contribution uses its real origin and gate endpoints with its physical
+port coefficient. Projection of the nondecreasing potential onto the cap is the
+physical law, not a failed invariant.
+
+For recovery, raw_rate is the baseline plus accumulated admitted marks. Its
+primitive gives the dose after FAST. When saturation straddles an uncertain
+contact, the original evaluator uses monotone Riemann bounds. The optimized
+formula uses R(y0)+B*(X-y0), where y0 lies in a certified contact bracket [l,u].
+Its excess over the capped dose is nonnegative and at most
+
+ (u-l)*max(|raw_rate(l)-B|, |raw_rate(u)-B|).
+
+The code subtracts [0,error], and uses this branch only when contact is certain
+and occurs before the minimum considered duration. Otherwise it retains the
+conservative original evaluator. This explains the bound's direction.
+
+Completed-history folding replaces initial+.1*full+partial transfers, or
+initial+.6*full+partial transfers, by an outer initial accumulator. This is
+valid because these past contributions affect every future evaluation only
+through that additive accumulator. The audited post-fold actuation structure
+contains saturation, fire and all marks. The deposit structure contains clamp
+state and the active segment. Counts/partial lists have been folded before
+merging; logical conditions are not read numerically and discarding them only
+enlarges the set. Structurally equal remaining histories can therefore merge
+their initial accumulators by the pointwise affine hull. Active segments cannot
+be folded as completed transfers.
+
+The saved profiles report maximum retained actuation-history count 32 and
+maximum retained deposit-history count 6. These counts neither prove that
+compression was unnecessary nor supply every earlier history configuration.
+
+8. Event coverage, joins and the actual special commutations
+
+The external queue is built from each parent's complete pulse train: raw_on,
+raw_off, mark_on, mark_off, error_on and error_off, plus terminal time 1116.
+The initial source raw_on at zero is represented in the initial raw state.
+A suffix minimum over all remaining lower bounds closes overlap groups; using
+only the next nominal midpoint would be insufficient.
+
+admissible_orders enumerates weak orders. It rejects only strict certified
+time contradictions, impossible absolute order intervals and incompatible
+auxiliary/raw automaton stages. Equal dates are retained. Exhausted budgets
+raise a refusal. A numerical sort proposes an order but does not certify one.
+
+The accepted join families have distinct reasons for completeness:
+
+- Ordinary external clusters first establish a guard-free window for every
+  retained order. They contain no optional principal emission.
+- FAST/SLOW clusters share the same closed admission and actuation gates.
+  The endpoint ell>0 and monotonicity exclude reopening inside the window.
+- Recovery/auxiliary clusters include the independent return among the weak
+  orders, and require guard-free READY continuation after reopening.
+- The legacy local cycle starts SLOW, encloses the return, and covers at most
+  one additional firing in a window narrower than 1. The single-train caller
+  joins only when every branch is READY and has no new emission. Otherwise it
+  raises BranchingRequired and cannot issue a complete cell receipt.
+- The new grouped-recovery fallback obeys the same zero-emission rule; its
+  successful-use records are absent from this campaign.
+
+The 202 successful fire_arrival_commutation records all consist of exactly one
+mark_off, with two branches and zero fire-time widening. There is no new raw_on
+in those groups. In READY, mark_off leaves the charge trajectory unchanged, so
+both orders have the same first fire F. If mark_off precedes F, the mark is
+already complete; if F precedes mark_off, its remaining part is integrated under
+protection. Equality contributes zero duration. The implementation joins after
+both events and strictly before F+1 and the next unprocessed exterior event.
+The broad raw-arrival lemma is not needed for this recorded specialization.
+
+A state join requires common time, principal/auxiliary modes, raw identities and
+compatible past emissions. It retains the actuation/deposit history union. A
+memory join requires equal anchors, pulse keys and tail flags; if those fail,
+losing the memory correlation is conservative only because the scalar state
+still encloses the charge. Retaining a convenient first branch's discrete state
+without those compatibility facts would not be justified.
+
+The new audit counts 537,492 continuous evaluations and 22,891 branch unions in
+the complete saved category counters. Only up to twelve largest-width increases
+per cell are saved with detailed contexts. These samples CANNOT classify every
+union. In particular, zero new recovery_group records does not imply zero legacy
+local-cycle uses. Fire and READY profile counters differ because some handler
+paths reopen directly without calling the same guard logger; the counters are
+not a complete event trace.
+
+9. Feedforward composition and what would discharge H_entry
+
+A sufficient LOCAL SOUNDNESS theorem is the following. Given any represented
+initial cell state and parent pulse trains, with a common global assignment of
+physical parameters and shared time identities, every physical trajectory is
+covered by some accepted branch at each step. The stored output train covers
+its complete emission history, and the stored terminal state covers its state
+at 1116. No claim of existence is needed for spurious branches.
+
+If this theorem holds for the effective v3.3 maps and all their reachable
+representation invariants, H_entry follows without another training run:
+
+Base: the source is exactly lane 0 at times 8k, and Section 2 covers every
+permitted initial state. Induction on layers: use the same parent's output
+time objects for all its destinations; the worker loads the corresponding
+previous-layer payloads. Each cell's local theorem supplies its covered output
+and terminal state. Shared parent uncertainty is not replaced by a different
+physical emission at each destination. Additional abstraction freedom may be
+introduced but must still include the common physical realization. The finite
+feedforward graph therefore yields all 216 terminal inclusions. The extracted
+bounds and active/silent classification are included in Q by its construction.
+
+This is a proof of the COMPOSITION IMPLICATION. Sections 2–8 supply substantial
+analytic and source correspondence lemmas. They do not constitute a completed
+machine-checked or exhaustive manual proof of the LOCAL SOUNDNESS theorem.
+The audit has not established a single inductive representation invariant at
+every call site covering all conditional branches, dynamic code substitutions,
+root domains, history-dependent modes and the executed native arithmetic.
+The saved terminal DAGs are not a substitute for that missing argument.
+
+10. Precise remaining work; no new campaign is currently justified
+
+The remaining review target is the local simulation relation for the exact
+v3.3 effective source, not another pass count. It must make explicit:
+
+(a) one globally consistent assignment for physical/noise symbols and clock
+    identities through root refinement, joins and reloaded parent payloads;
+(b) phase, raw-tail, gate-endpoint and future-queue invariants that justify
+    every clamp/intersection and every guard probe, including optional branches;
+(c) a covering successor branch for each physical event and each equal-time
+    order, with first crossings and complete output histories preserved;
+(d) the trusted arithmetic/compiled-binary boundary under which the source
+    formulas are actually executed.
+
+A source-level soundness proof can discharge these obligations without a full
+trace. Alternatively, independently checkable local transition certificates
+could supply execution-specific evidence, if such material exists. The current
+archives do not contain a complete such trace. This is not evidence that the
+campaign is wrong; it is a limit on the claim established here.
+
+The 18/18 result and passing H1/H2 reports should therefore retain their precise
+status: consistent completed research computation plus local checks. The future
+closure and the initial-section inequalities are additional proved mathematical
+results. An unconditional all-training-trajectories invariance claim remains
+open until the local soundness link is discharged.

@@ -1,0 +1,4 @@
+def value(h,t):
+    if h.clamped:return TARGET
+    x=offered(h,t)
+    return amin(x,TARGET)

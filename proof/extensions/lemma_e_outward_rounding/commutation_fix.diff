@@ -1,0 +1,4 @@
+228c228
+<     rho = r0 + I(-delta, D(0)) if delta > 0 else r0
+---
+>     rho = r0 + I(delta.copy_negate(), D(0)) if delta > 0 else r0

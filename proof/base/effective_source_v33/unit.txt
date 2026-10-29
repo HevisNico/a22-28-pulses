@@ -1,0 +1,126 @@
+def unit(inputs,cell):
+    global PROFILE
+    PROFILE=Profile(inputs)
+    events={};raw=[None]*3
+    def add(t,action,j=-1,origin=None):events.setdefault(t.token(),[t,[]])[1].append((action,j,origin))
+    for j,train in enumerate(inputs):
+        assert all(train[k+1].minus(train[k]).lo>D('1.3') for k in range(len(train)-1))
+        for k,start in enumerate(train):
+            if start.box().hi<U0.lo:assert start.token()==('clock','0');raw[j]=start
+            else:add(start,'raw_on',j,start)
+            add(start.plus(1),'raw_off',j,start)
+            mon=shift(start,D1_PORTS[j] if k==0 else D0_PORTS[j],f'{cell}:m:{j}:{k}')
+            off=shift(mon,DM_PORTS[j],f'{cell}:mo:{j}:{k}');err=shift(off,DS_PORTS[j],f'{cell}:e:{j}:{k}');end=shift(err,DE_PORTS[j],f'{cell}:eo:{j}:{k}')
+            add(mon,'mark_on',j,mon);add(off,'mark_off',j,mon);add(err,'error_on',j,err);add(end,'error_off',j,err)
+    add(v.T('clock',I(0),D(1116)),'end')
+    pending=sorted(events.values(),key=lambda e:e[0].box().mid());assert pending[-1][0].token()==('clock','1116')
+    suffix=[D('Infinity')]*(len(pending)+1)
+    for k in range(len(pending)-1,-1,-1):suffix[k]=min(suffix[k+1],pending[k][0].box().lo)
+    s=dict(t=v.T('initial_slab',U0),q=R+INIT['q']*(-K*U0).exp()+I(0,(3*C*A*U0).hi),
+        z=[I(g).ln()+INIT['z'][i] for i,g in enumerate(('.3','1.2','.3'))],b=I('.08')+INIT['b'],
+        p=0,raw=raw,aux=[0]*3,mark=[None]*3,err=[None]*3,caps=[False]*3,bstop=False,fire=None)
+    s['memory']=new_memory(s);s['actuation']=(ac.History(s['b']),)
+    s['depot']=tuple((dz.History(z),) for z in s['z'])
+    out=[];idx=0;count=0;clusters=0;branches=0;stops=0
+    while idx<len(pending):
+        stopidx=idx+1;upper=pending[idx][0].box().hi
+        while upper>suffix[stopidx]:
+            assert stopidx<len(pending);upper=max(upper,pending[stopidx][0].box().hi);stopidx+=1
+        group=pending[idx:stopidx]
+        exact=constant_recovery(s,cell,count)
+        auxiliary_only=all(a not in ('raw_on','raw_off','end','mark_on') for _,changes in group for a,_,_ in changes)
+        if exact is None and s['p']==2 and auxiliary_only:
+            span=v.T(f'{cell}:aux-span:{count}',I(min(t.box().lo for t,_ in group),upper))
+            if span.minus(s['t']).hi>=0:
+                envelope=ac.bounds(s['actuation'],span,'ell')
+                if envelope.lo<=0<=envelope.hi:exact=independent_recovery(s,cell,count)
+        if exact is not None and exact.box().lo<=upper and exact.box().hi>=min(t.box().lo for t,_ in group):
+            uncertain=any(t.minus(exact).lo<=0<=t.minus(exact).hi for t,_ in group)
+            if uncertain:
+                upper=max(upper,exact.box().hi)
+                while upper>suffix[stopidx]:
+                    assert stopidx<len(pending)
+                    upper=max(upper,pending[stopidx][0].box().hi);stopidx+=1
+                group=pending[idx:stopidx]
+                if all(a not in ('raw_on','raw_off','end') and (a!='mark_on' or s['bstop']) for _,changes in group for a,_,_ in changes):
+                    s,number=recovery_auxiliary_cluster(s,group,upper,exact,cell,count)
+                    idx=stopidx;clusters+=1;branches+=number;count+=len(group)+1
+                    continue
+        if s['p']==1:
+            section=s['fire'].plus(1).box()
+            if section.lo<=upper and section.hi>=min(t.box().lo for t,_ in group):
+                upper=max(upper,section.hi)
+                while upper>suffix[stopidx]:
+                    assert stopidx<len(pending)
+                    upper=max(upper,pending[stopidx][0].box().hi);stopidx+=1
+                group=pending[idx:stopidx]
+                s,number=protected_section_cluster(s,group,upper,cell,count)
+                idx=stopidx;clusters+=1;branches+=number;count+=len(group)+1
+                continue
+        if len(group)>1:
+            lower=min(x[0].box().lo for x in group);L=v.T(f'{cell}:L:{count}',I(lower))
+            try:s,kind=advance(s,L,cell,count)
+            except v.Ambiguous:
+                _c=COMMUTE(s,pending,idx,stopidx,suffix,cell,count)
+                if _c is None:
+                    _r=RECOVERY_GROUP(s,pending,idx,cell,count)
+                    if _r is None:raise
+                    s,_k,_n,_m=_r;idx=_k;count+=_n;clusters+=1;branches+=_m
+                    continue
+                s,_f,_n,_k=_c;out.append(_f);count+=_k-idx+1;idx=_k;clusters+=1;branches+=_n
+                continue
+            count+=1
+            if kind!='external':
+                if kind=='fire':out.append(s['t'])
+                if kind=='gstop':stops+=1
+                continue
+            U=v.T(f'{cell}:U:{count}',I(upper));poss=[]
+            try:
+                for order in admissible_orders(s,group):
+                    ss=s
+                    for tt,actions in order:ss=act(flowing(ss,tt,True),actions)
+                    ss=flowing(ss,U,True);poss.append(ss)
+            except AssertionError as _refusal:
+                if str(_refusal)!='internal crossing inside uncertain external cluster':raise
+                _c=COMMUTE(s,pending,idx,stopidx,suffix,cell,count)
+                if _c is None:raise
+                s,_f,_n,_k=_c;out.append(_f);count+=_k-idx;idx=_k;clusters+=1;branches+=_n
+                continue
+            assert all(x['aux']==poss[0]['aux'] and x['p']==poss[0]['p'] and
+                [(t.token() if t else None) for t in x['raw']]==[(t.token() if t else None) for t in poss[0]['raw']] for x in poss)
+            s=join_states(poss,dict(cell=cell,batch=count,orders=len(poss),kind='external'))
+            idx=stopidx;clusters+=1;branches+=len(poss);count+=len(group)
+        else:
+            tt,actions=group[0]
+            try:s,kind=advance(s,tt,cell,count)
+            except v.Ambiguous:
+                _c=COMMUTE(s,pending,idx,stopidx,suffix,cell,count)
+                if _c is not None:
+                    s,_f,_n,_k=_c;out.append(_f);count+=_k-idx+1;idx=_k;clusters+=1;branches+=_n
+                    continue
+                if s['p']!=2:raise
+                from cycle_local_A20 import pending_window,BranchingRequired
+                forest,nextidx,handled=pending_window(s,pending,idx,cell,count)
+                # Joining zero-emission ready branches is compatible with the
+                # legacy single-train interface. Every other forest escapes
+                # intact, including past outputs and pending physical events.
+                if all(not x.emissions and x.state['p']==0 for x in forest.branches):
+                    s=join_states([x.state for x in forest.branches],dict(cell=cell,batch=count,kind='local_cycle_no_emission'))
+                    idx=nextidx;count+=len(handled)+1;clusters+=1;branches+=len(forest.branches)
+                    continue
+                continuation=dict(cell=cell,batch=count,completed_output_prefix=tuple(out),
+                    pending=tuple(pending[nextidx:]),next_index=nextidx,join_time=forest.branches[0].state['t'],
+                    outputs_complete_through_window=True,terminal_output_train_complete=False)
+                raise BranchingRequired(forest,continuation)
+            count+=1
+            if kind=='external':s=act(s,actions);idx+=1
+            elif kind=='fire':out.append(s['t'])
+            elif kind=='gstop':stops+=1
+        assert count<20000
+    assert s['p']==0 and s['aux']==[0]*3 and s['raw']==[None]*3
+    aux=[RM if tr else RM+I(-DELTA.hi,DELTA.hi)*(-K*(I(1116)-U0)).exp() for tr in inputs]
+    return out,dict(terminal_affine=s,q=s['q'].pair(),g=[(C if s['caps'][j] else s['z'][j].exp()).pair() for j in range(3)],b=s['b'].pair(),E=[50,100],m=[x.pair() for x in aux],
+        main_phase=0,aux_phases=[0]*3,pending=[],caps=s['caps'],b_stop=s['bstop'],gain_stops=sum(s['caps']),clusters=clusters,orders_enclosed=branches,events=count,
+        width_profile=PROFILE.export(),actuation_summary=[dict(full_marks=h.full,partial_marks=len(h.partial),saturated=h.saturated) for h in s['actuation']],
+        deposit_summary=[[dict(full_errors=h.full,partial_errors=len(h.partial),clamped=h.clamped) for h in hs] for hs in s['depot']],
+        width=str(max((C if s['caps'][j] else s['z'][j].exp()).width() for j in range(3))),q_width=str(s['q'].width()),b_width=str(s['b'].width()),maximum_time_width=str(max((t.box().width() for t in out),default=D(0))))

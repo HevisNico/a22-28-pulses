@@ -1,0 +1,54 @@
+PACKAGE VALIDATION — v3.3 + C7
+==============================
+
+Changes from v3.3: ENGINE_CHANGES_FROM_V33.diff (affine/engine.py) and the
+module affine/cluster_memory_cover.py. The physics kernel (kernel/) is
+unchanged, byte for byte. The v3.3 validation record is engine/VALIDATION_EN.txt
+in the repository.
+
+Identity of the reference campaign (A22_v33c7_1em3, eps = 1e-3)
+-------------------------------------------------------------
+  run_id     556d92bf365c4a158023627b07c5b514
+  kernel_id  d8fedb8d10940585ab0ecbac53360882e98769cf4dde8d703f87319dfc8bad3d
+  affine/_rounding_native     f8745c6046e0ba84f0c8d6457d478d43bc041132ec67bb4484bb131e08f8941e
+  kernel/native/_a22_native   209bb50ca3fae5313ded1ead5a1e72d2949ff3a012fe34b3bc3347ab8f54c425
+  CPython 3.12.3, numpy 2.3.5, scipy 1.17.0, Linux x86-64
+The kernel_id is reproduced exactly from the as-run engine (release asset
+A22_v33c7_engine_as_run.zip). A new build produces new binaries and a new
+kernel_id; tests/ are not part of the identity.
+
+How the changes were found (cell (18, 6) at eps = 1e-3)
+-------------------------------------------------------
+- v3.3: refusal, the READY peak-time logarithm has no certified positive
+  argument. Same refusal with v3.3 + C1 (narrower first auxiliary delay),
+  so C1 was dropped.
+- v3.3 + C7: the logarithm is bypassed; next refusal "root bracket
+  failed" on [0, 0.774]. A single-cell replay logging the bracket tests
+  showed: a correct guess (0.2136), the fire root spread over about
+  [0.13, 0.34] over the box, the slope positive on every 1/48 piece up to
+  0.70 (minimum 0.52), and a negative slope bound only for the single
+  evaluation over [0, 0.643]. Hence remark P.
+- v3.3 + C7 + P: cell (18, 6) accepted in 329 s; then the full campaign.
+
+Checks on this exact package
+----------------------------
+- Tests: 94/94 pass: the 78 tests of the v3.3 sweep package and 16 targeted
+  tests in tests/test_c7_c6_p.py:
+    P:  exact partition of [l, h] (contiguous, endpoints kept), hull of the
+        pieces returned, a wide root accepted only through pieces, refusal
+        kept for a possible tangency, for a zero slope lower bound and for
+        missing sign changes, acceptance with a slope lower bound of 1e-30;
+    C6: acceptance below threshold, subdivision needed near threshold,
+        refusal at threshold, refusal at the depth limit, refusal outside
+        READY or without a pulse memory;
+    C7: peak_upper above the sampled exact charge for an interior peak,
+        for a logarithm without positive argument and near threshold;
+        advance() flows to the boundary when the bound is below 1 and
+        keeps the original refusal when it is not.
+- Reference campaign at eps = 1e-3: 18/18 layers, each re-read by a
+  separate verifier process; 21 302 network emissions during training
+  (output spikes of all cells over the 128 source pulses), 191 active
+  cells and 540 auxiliary ports at exact rest, 4 gain caps.
+
+These checks establish package consistency and the behaviour of the new
+paths. The mathematics is in sweep/v33_c7/LEMMAS_C7_C6_EN.txt.

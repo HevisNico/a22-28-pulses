@@ -1,0 +1,13 @@
+def increment(s,t,live=False):
+    if live and s.full_end:return final_potential(s)
+    if not s.full_start:
+        # Every intercepted mark ends at most DM<1 after the firing.
+        # Its value at an arbitrary earlier probe is evaluated naturally.
+        if t.minus(s.start).hi<=0:return I(0)
+        a=t.minus(s.origin)
+        if a.lo>=DM.hi:return final_potential(s)
+        elapsed=t.minus(s.start).nonnegative()
+        x=EB*charge(s,s.start)*(1-(-LAM*elapsed).exp())
+        cap=final_potential(s)
+        return amax(I(0),amin(x,cap))
+    return gain(t.minus(s.origin))

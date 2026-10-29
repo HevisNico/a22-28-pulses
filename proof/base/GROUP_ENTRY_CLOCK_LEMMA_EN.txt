@@ -1,0 +1,116 @@
+A22 v3.3 — FORWARD ENTRY INTO EXTERIOR GROUPS
+===========================================
+
+Scope: manual source argument for the effective unit/advance/flowing path.
+No execution or replay of the supplied engine is part of this argument.
+
+The obligation
+--------------
+
+For a multiple-event exterior group, unit sets L to its least absolute
+lower endpoint and calls advance(s,L). Nonnegative clipping alone would
+not justify this call if a physical control date were later than L.
+A recovery prediction can extend a previously single-event group; hence
+one must inspect the control paths that can reach SLOW, rather than assume
+that all artificially introduced group clocks automatically follow s.t.
+
+The relevant distinction is between a physical ordering and disjoint
+absolute boxes. Internal roots certified before a point L can have loose
+boxes; physical control <= L suffices. A state reached while approaching
+a single uncertain event may instead be later than that event's lower
+bound, so this second case needs its own proof.
+
+Queue closure
+-------------
+
+The initial block is closed under absolute overlap using suffix[stopidx].
+When closure stops, EVERY event outside the block has lower bound at least
+its current upper endpoint. Extending this block can therefore increase
+its upper endpoint but cannot decrease its minimum lower endpoint L.
+
+After consuming an ordinary single event, its upper endpoint is at or
+before the lower bounds of all remaining events. After consuming a multiple
+block, the state is at the common point U and all remaining lower bounds
+are >=U. The protected, recovery/auxiliary, local-cycle and recorded
+commutation macros also end no later than the remaining exterior lower
+bounds. For pending_window this is the explicit rest_lower>=upper stop
+condition. Thus consumed exterior blocks establish the required forward
+entry property for the next block.
+
+Internal steps while approaching an already-multiple block
+---------------------------------------------------------
+
+These steps use its point L as the boundary. An accepted internal event
+is physically before L (or is the fixed zero-duration normalization).
+Repeating the loop does not decrease L: the pending queue has not changed,
+and recovery/section extension cannot lower the original block minimum.
+Hence the next call targeting that minimum is still forward for every
+physical realization. This uses the root-order lemma for uncertain roots;
+it does not infer physical ordering from a midpoint sort.
+
+Internal steps while approaching a single event
+-----------------------------------------------
+
+An internal READY return leaves the state READY. In READY, unit has no
+recovery or FAST-section expansion. The unchanged original block remains
+a single event, so no artificial minimum is used. A later internal fire
+leaves the state FAST, treated next.
+
+A fire likewise leaves the state FAST. In FAST, the unit loop checks the
+absolute box of F+1 BEFORE calling ordinary advance. If that box overlaps
+the current exterior block (including equality), the code calls
+protected_section_cluster. That macro explicitly requires
+
+  min(event.box.lo for event in group) >= s.t.box.hi.
+
+If the requirement fails the macro cannot produce a successful result.
+If it succeeds, its exterior propagation starts forward and its common U
+is a valid SLOW state after the consumed block.
+
+If the boxes do not overlap, there are only two possibilities:
+
+* F+1 is wholly after the exterior block. A sound ordinary step cannot
+  normalize the section ahead of this earlier exterior boundary.
+* F+1 is wholly before the block: section.box.hi < min(event.box.lo).
+  If ordinary advance normalizes FAST to SLOW here, its new control date
+  has an upper bound strictly below the original block minimum.
+
+Thus SLOW reached by normalizing a section while approaching a single event
+ALREADY has its whole control box before that block minimum. A subsequent
+recovery-based extension cannot lower the minimum, so its advance(s,L)
+call is forward. The potentially troublesome case of a section physically
+before the event but overlapping its absolute box is handled by the
+protected macro; it does not pass through ordinary normalization.
+
+Completeness of the SLOW case split
+-----------------------------------
+
+The effective ordinary advance has no other SLOW-preserving internal reset:
+its only SLOW internal candidate is the return, which leaves READY. Other
+SLOW control states come from exterior propagation or the protected macro,
+whose processed-block endpoints satisfy the queue bound above. Recovery
+and successful local zero-emission joins finish READY; fire commutations
+finish FAST. Initialization is READY before the scheduled first events.
+
+Combining these cases proves physical control <= L at every successful
+ordinary multiple-group entry. No backward physical propagation has to
+be excused by clipping, by a virtual SLOW charge, or by a measured-width
+heuristic. Counterfactual root probes remain separate from live advances.
+
+Source anchors
+--------------
+
+* kernel_soundness/output/effective_source/unit.txt: suffix closure;
+  recovery extension; inclusive FAST-section overlap test before advance;
+  lower=min(...); advance(s,L).
+* validation_A15.protected_section_cluster: explicit group-lower versus
+  control-upper assertion, common U, and SLOW normalization.
+* kernel_soundness/output/effective_source/advance_inner.txt: internal
+  candidates and their target boundary; return leaves READY.
+* avance_causale_A22.advance: fixed-section normalization preserves F+1.
+* cycle_local_A20.pending_window: stop only at rest_lower>=upper.
+
+These are source-level proof premises, not a claim that saved profiles
+contain a complete transition trace. The companion structural checker
+records witnesses for these premises; it does not mechanically prove the
+inductive case analysis.

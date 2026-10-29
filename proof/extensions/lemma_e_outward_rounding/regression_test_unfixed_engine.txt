@@ -1,0 +1,22 @@
+# Unfixed engine (v4.6 package: C7 + calendar28_T230.patch), commutation.py line:
+228:    rho = r0 + I(-delta, D(0)) if delta > 0 else r0
+# commutation.py sha256: 3aad05fa74e8dbed9e089e422936d29377240b5d84d9d7dc0873910e50f2548d
+# command: python -B -m unittest -v tests.test_commutation_rounding
+test_archived_delta_is_the_reported_case (tests.test_commutation_rounding.CommutationRounding.test_archived_delta_is_the_reported_case) ... ok
+test_old_expression_was_inward (tests.test_commutation_rounding.CommutationRounding.test_old_expression_was_inward) ... ok
+test_widening_is_outward_and_exact (tests.test_commutation_rounding.CommutationRounding.test_widening_is_outward_and_exact) ... FAIL
+
+======================================================================
+FAIL: test_widening_is_outward_and_exact (tests.test_commutation_rounding.CommutationRounding.test_widening_is_outward_and_exact)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/922635ce-63c4-5aa6-8c70-3749f723fa67/scratchpad/oldchk/A22_fresh_launch_v3_3_C7/tests/test_commutation_rounding.py", line 48, in test_widening_is_outward_and_exact
+    self.assertLessEqual(rho.lo, required)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: Decimal('0.2482228588982200685780834315') not less than or equal to Decimal('0.2482228588982200685780834314937847164136586683152553034122819181327464248667015851324221599243050010583803969657955426444243022904554756414554167120412986378761')
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+FAILED (failures=1)
+# exit code: 1

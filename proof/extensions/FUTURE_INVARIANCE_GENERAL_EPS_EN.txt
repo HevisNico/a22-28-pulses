@@ -1,0 +1,44 @@
+ADDENDUM TO proof/FUTURE_INVARIANCE_PROOF_EN.txt: GENERAL RELATIVE WIDTH EPS
+============================================================================
+
+proof/FUTURE_INVARIANCE_PROOF_EN.txt is kept byte-identical (its hash is
+cited). This addendum states the two changes that make it valid for a
+relative parameter half-width eps other than 1e-4, and records the values
+certified at eps = 1e-3 for the campaign of this folder.
+
+1. Section A, definition of Q(theta): "within the relative +/-1e-4
+   parameter ranges" becomes "within the relative +/-eps parameter ranges".
+2. Section B: "each eta is independently in [-1e-4,1e-4]" becomes "each eta
+   is independently in [-eps,eps]".
+
+No other step of the argument uses the value of eps. Every eps-dependent
+quantity it uses (the bracket of M, the durations DM, DS, DE, the rates LM,
+LS, LE, the cap C = 4(1 +/- eps), and the work bound W) is recomputed from
+eps by both checkers:
+
+  sweep/v23/eps_1em3/future/certify_future_eps.py           (third argument eps)
+  sweep/v23/eps_1em3/future/verify_future_certificate_eps.py (fourth argument eps)
+
+At eps = 1e-4 on the published terminal states, both reproduce the published
+outputs exactly (sweep/v23/eps_1em3/future/check_v33_eps1e-4.json and
+independent_check_v33_eps1e-4.json).
+
+The theorem then holds at eps for a terminal domain Q exactly when both
+checkers pass on its extracted enclosures. Its numerical constants become
+those of the certificate.
+
+Values at eps = 1e-3, program v3.3 + C7 (terminal/ in this folder)
+-----------------------------------------------------------------
+                                              eps = 1e-4 (published)   eps = 1e-3
+active / inactive cells, masked ports         191 / 25, 15             191 / 25, 15
+influential active ports                      525                      525
+whole network at rest before                  12.790360 < 12.791       12.790682 < 12.791
+idle margin before the next pulse             > 7.209                  > 7.209
+gap: latest firing to first error actuation   > 0.183717               > 0.172671
+influential errors end before reopening       > 0.596642               > 0.540593
+all raw inputs end before reopening           > 0.100143               > 0.099900
+masked arrival after firing                   > 0.049143               > 0.048946
+
+Both checkers: PASS (terminal/future_certificate_eps1e-3.json,
+terminal/independent_check_eps1e-3.json). The bounds 12.791 and 7.209 used in
+the statement of the theorem therefore hold unchanged at eps = 1e-3.

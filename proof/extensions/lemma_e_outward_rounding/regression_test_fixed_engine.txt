@@ -1,0 +1,13 @@
+# Fixed engine (same package, one line changed), commutation.py line:
+228:    rho = r0 + I(delta.copy_negate(), D(0)) if delta > 0 else r0
+# commutation.py sha256: ae313d46d7173accd7d6a1a9f242ec1c50fba105f6a7717e15cbc97cc6edf336
+# command: python -B -m unittest -v tests.test_commutation_rounding
+test_archived_delta_is_the_reported_case (tests.test_commutation_rounding.CommutationRounding.test_archived_delta_is_the_reported_case) ... ok
+test_old_expression_was_inward (tests.test_commutation_rounding.CommutationRounding.test_old_expression_was_inward) ... ok
+test_widening_is_outward_and_exact (tests.test_commutation_rounding.CommutationRounding.test_widening_is_outward_and_exact) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK
+# exit code: 0
