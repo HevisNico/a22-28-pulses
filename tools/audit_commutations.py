@@ -1,10 +1,12 @@
 """Read-only audit of the recorded fire/exterior commutations of a campaign directory.
 
-Section 8(vi) of the learning-coverage theorem covers commutations whose group is one
-mark_off, with two orders and zero fire-time widening. This script checks that every
-recorded fire_arrival_commutation of a campaign is of that kind, and writes a summary
-in the format of proof/evidence/commutation_usage.json. Same payload checks as
-audit_campaign_dir.py. No engine import.
+Extracts every recorded fire_arrival_commutation and reports event patterns, branch
+counts and widening diagnostics. The all_* fields describe the historical single
+mark_off case of Section 8(vi); they are diagnostics, not acceptance conditions.
+The 28-pulse campaign also has raw_on/mark_on/mark_off, raw_off and error_on groups,
+covered by the general lemma E in proof/extensions/COVERAGE_THEOREM_GENERAL_EPS_EN.txt.
+This script checks payload hashes and summarizes records; it does not independently
+prove lemma E or event-order coverage. No engine import.
 Usage: python3 -I audit_commutations.py <campaign dir> <output.json>
 """
 import json,sys

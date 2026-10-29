@@ -1,11 +1,11 @@
 # The proof, in reading order
 
-The result has four parts. Each step names the document that argues it and the program or certificate
+The argument is organized into six steps. Each step names the document that argues it and the program or certificate
 that checks its finite part.
 
 | Step | Statement | Argument | Finite checks |
 |---|---|---|---|
-| 1. Model | the hybrid cell, its parameters, the network and the source | [`model/full_model_reference.md`](../model/full_model_reference.md) | — |
+| 1. Model | the hybrid cell, its parameters, the network and the source | [`model/CURRENT_SPEC.md`](../model/CURRENT_SPEC.md), with the archived equations linked there | — |
 | 2. Initial section | from every admissible initial state, the first source pulse is admitted from known invariants | [`base/LEARNING_COVERAGE_THEOREM_EN.txt`](base/LEARNING_COVERAGE_THEOREM_EN.txt), [`extensions/COVERAGE_THEOREM_GENERAL_EPS_EN.txt`](extensions/COVERAGE_THEOREM_GENERAL_EPS_EN.txt) | `tools/certify_initial_section.py` → `terminal/initial_section_eps1e-3.json` |
 | 3. Training coverage | the enclosure computed by the engine contains every trajectory, up to the cut at T = 230 | [`base/LEARNING_COVERAGE_THEOREM_EN.txt`](base/LEARNING_COVERAGE_THEOREM_EN.txt), [`base/GROUP_ENTRY_CLOCK_LEMMA_EN.txt`](base/GROUP_ENTRY_CLOCK_LEMMA_EN.txt), [`base/STRICT_ROOT_LEMMA_EN.txt`](base/STRICT_ROOT_LEMMA_EN.txt); at ±1e-3: [`extensions/COVERAGE_THEOREM_GENERAL_EPS_EN.txt`](extensions/COVERAGE_THEOREM_GENERAL_EPS_EN.txt) (lemma E), [`extensions/LEMMAS_C7_C6_EN.txt`](extensions/LEMMAS_C7_C6_EN.txt) (C7, C6, P), [`extensions/lemma_e_outward_rounding/`](extensions/lemma_e_outward_rounding/README.md); for 28 pulses and T = 230: [`extensions/CALENDAR_COVERAGE_BRIDGE.md`](extensions/CALENDAR_COVERAGE_BRIDGE.md) | the campaign (`campaign/`), `tools/extract_terminal.py`, `tools/audit_lineage.py`, `tools/audit_commutations.py` |
 | 4. Entry into Q28 | at T = 230 every trajectory is in the explicit domain Q28 | the same documents | `terminal/all_terminal_exact.json`, `tools/build_q_domain.py` → `terminal/invariant_domain_Q28.json` |
@@ -16,6 +16,13 @@ A guided tour of the first version of the argument (five propositions, the three
 is [`base/PROOF_WALKTHROUGH.md`](base/PROOF_WALKTHROUGH.md); the review guide of that version is
 [`base/REVIEW_GUIDE_EN.txt`](base/REVIEW_GUIDE_EN.txt), and [`base/TRAINING_ENTRY_REVIEW_EN.txt`](base/TRAINING_ENTRY_REVIEW_EN.txt)
 is its critical review of the training entry.
+
+## Current model and historical references
+
+[`model/CURRENT_SPEC.md`](../model/CURRENT_SPEC.md) specifies the current parameter family,
+initial states and 28-pulse/T = 230 protocol. `model/full_model_reference.md` and its copy inside
+`engine/reference/` preserve the historical reference and status text. Read their 128-pulse/T = 1116
+figures with the explicit substitutions in the current specification and calendar bridge below.
 
 ## The two layers of documents
 
