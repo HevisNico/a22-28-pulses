@@ -49,7 +49,7 @@ Copied from a22-interval-replay at commit `100e5852f94fdeeaa97cd856ab6f7e3b7d8ee
 
 Changes to the tools: import paths; the extractor reads the terminal time from the campaign identity;
 `tools/verify_future.py` also checks the premises of every silent cell (the original skipped silent cells;
-its output is unchanged on all published domains). `tools/build_q_domain.py` and `tools/verify.py` are new.
+the numerical results are unchanged on all published domains). `tools/build_q_domain.py` and `tools/verify.py` are new.
 The documents are unchanged; their figures for the first version (±1e-4, 128 pulses, T = 1116) are carried
 to this result by the extension documents.
 
@@ -62,3 +62,20 @@ parameter and initial-state scope. The introductory docstring of
 These clarifications leave the historical model documents, engine sources, proof archives,
 campaign records, certificates and release-asset checksums unchanged. They do not extend
 the proved family or supply a formal verification of the engine.
+
+## Verification corrections
+
+The future-certificate generator, independent checker and Q28 builder now require exact agreement
+between the terminal campaign's ε, the certificate's ε and any explicit command-line value. Omitting
+the argument uses the campaign value. `certificate_parameters.py` shares only metadata validation;
+the two numerical implementations remain separate. The independent Decimal checker constructs the
+parameter factors with its directed interval operations and records `eps` in its report.
+`terminal/independent_check.json` is regenerated with that additional field; its numerical values are unchanged.
+
+`tools/verify.py --engine` now reconstructs the archived identity statically from the files and recorded
+environment. The optional `--check-runtime` separately verifies the interpreter, dependency versions,
+arithmetic backend and actually loaded native binaries. Failed static checks prevent runtime loading.
+Regression tests for these behaviors are in `tools/tests/` and run in CI.
+
+These changes do not modify engine sources, the campaign identity, release assets, terminal enclosures,
+the directed-integer future certificate, Q28 or the proof documents.

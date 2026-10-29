@@ -2,10 +2,14 @@
 operations and unscaled Taylor series. No root search, engine import or replay.
 Decimal exp/ln are not used. All transcendental bounds are finite series with
 explicit positive remainders; arithmetic uses two 70-digit directed contexts.
+The parameter width is read from the terminal campaign and must match the
+certificate and any optional fourth argument.
 """
 import json,sys,hashlib
 from pathlib import Path
 from decimal import Decimal as D,Context,ROUND_FLOOR,ROUND_CEILING
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from certificate_parameters import resolve_epsilon
 LO=Context(prec=70,rounding=ROUND_FLOOR);HI=Context(prec=70,rounding=ROUND_CEILING)
 class B:
  def __init__(self,x,hi=None):
@@ -48,7 +52,9 @@ def h(x):
 
 def main():
  if not __debug__:raise RuntimeError('Run without -O')
- src,cf,out=map(Path,sys.argv[1:4]);E=D(sys.argv[4]) if len(sys.argv)>4 else D('1e-4');LOW=str(1-E);UP=str(1+E);data=json.loads(src.read_text());c=json.loads(cf.read_text())
+ src,cf,out=map(Path,sys.argv[1:4]);data=json.loads(src.read_text());c=json.loads(cf.read_text())
+ epsilon=resolve_epsilon(data,sys.argv[4] if len(sys.argv)>4 else None,c)
+ E=B(epsilon.numerator)/B(epsilon.denominator);LOW=(1-E).l;UP=(1+E).u
  assert hashlib.sha256(src.read_bytes()).hexdigest()==c['terminal_input_sha256'] and c['campaign']==data['campaign']
  deriv=A*exp(-A)-K*exp(-K);assert deriv.l>0
  M=B('.975')/h(B('.02'))*B(LOW,UP)
@@ -58,7 +64,7 @@ def main():
  err=D0+DM+DS;end=err+DE;assert err.l>1 and end.u<D('1.3')
  LM=log(B('1.25'))/B('.02')*B(UP);LS=3*log(B(2))/B('1.06')*B(UP);LE=A/B('.15')*B(UP)
  assert max(LS.u,LE.u)<LM.l
- W=(3*B(str(4*(1+E)))+3*B(M.u)+1)*A+B('1.1')+B('4.5')*LM+B('2.4')*LE;assert W.u<500
+ W=(3*4*B(UP)+3*B(M.u)+1)*A+B('1.1')+B('4.5')*LM+B('2.4')*LE;assert W.u<500
  assert len(data['cells'])==216 and len({(x['layer'],x['lane']) for x in data['cells']})==216
  pmin=1+LN25/B('1.1');cells={(x['layer'],x['lane']):x for x in data['cells']};rows={(r['layer'],r['lane']):r for r in c['cells']}
  prev=[B(0)]+[None]*11;quiet=D(0);minima={};active=masked_n=influential_n=0
@@ -109,6 +115,7 @@ def main():
  assert (active,masked_n,influential_n)==(191,15,525)
  assert quiet<D('12.791') and (B(20)-B(quiet)).l>D('7.209')
  result=dict(status='PASS',scope='Independent verification of fixed future-wave brackets and strict guard inequalities; no training-entry qualification',arithmetic='Decimal-directed 70-digit operations; degree-90 unscaled exponential series; 250-term atanh logarithms; explicit tails; no exp/ln library calls',certificate_sha256=hashlib.sha256(cf.read_bytes()).hexdigest(),terminal_input_sha256=c['terminal_input_sha256'],active_cells=active,masked_ports=masked_n,influential_ports=influential_n,global_quiescent_upper=str(quiet),global_quiescent_coarse_strict_bound='12.791',idle_margin_coarse_strict_lower='7.209',minimum_margins={k:str(v) for k,v in minima.items()},work_upper=str(W.u))
+ result['eps']=str(epsilon)
  out.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
 
 if __name__=='__main__':main()

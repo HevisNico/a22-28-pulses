@@ -38,3 +38,5 @@ jobs:
           python-version: '3.12'
       - name: Regenerate and compare
         run: python -I tools/verify.py
+      - name: Verification tool regressions
+        run: python -B -m unittest discover -s tools/tests

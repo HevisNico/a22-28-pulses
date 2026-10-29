@@ -1,12 +1,15 @@
 """Finite inequality certificate for future waves, independent of the A22 engine.
 No training simulation or replay. Integer directed intervals; scale 10**90.
 Input: authenticated stored terminal endpoints. Entry soundness is a premise.
-Variant: the relative parameter half-width EPS is a third argument (default 1e-4, the
-original). Only the constants derived from it change; cell counts are reported, not imposed.
+The relative parameter half-width EPS comes from the terminal campaign metadata.
+An optional third argument must agree with it exactly. Only the constants derived
+from it change; cell counts are reported, not imposed.
 """
 import json,sys,hashlib
 from pathlib import Path
 from fractions import Fraction as F
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from certificate_parameters import resolve_epsilon
 S=10**90
 
 def ceildiv(a,b):return -((-a)//b)
@@ -92,8 +95,8 @@ def bisect_threshold(fun,left,right,iterations=42):
 def main():
  if not __debug__:raise RuntimeError('Run without -O')
  global EPS
- EPS=F(sys.argv[3]) if len(sys.argv)>3 else F('1e-4')
  src=Path(sys.argv[1]);target=Path(sys.argv[2]);data=json.loads(src.read_text());cells=data['cells'];assert len(cells)==216
+ EPS=resolve_epsilon(data,sys.argv[3] if len(sys.argv)>3 else None)
  Mnom=I('.975')/h(I('.02'));M=Mnom*I(1-EPS,1+EPS)
  def aq(t,upper):return RM+(M.high() if upper else M.low())*h(I(t,t,raw=True))
  dlo=bisect_threshold(lambda t:aq(t,True),0,S//10)[0]
